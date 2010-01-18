@@ -1,0 +1,28 @@
+div.boardsection {
+	float: left;
+	background: green;
+}
+
+div.building {
+	float: left;
+	background: white;
+	margin: 4px;
+	padding: 2px;
+	min-width: 200px;
+	min-height: 60px;
+}
+
+div.units {
+	background: white;
+}
+
+span.allied {
+	color: green;
+}
+
+div.Core {
+}
+
+div.MediumManaRuby {
+	background: red;
+}

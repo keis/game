@@ -1,0 +1,79 @@
+treating my 64x64 boxes as unit circles
+
+in reality the whole section should be larger then pi
+
+core sections:
+	3 children
+	section 1: 0..(pi/3),		mid = pi/6
+	section 2: (pi/3)..(2 pi/3) mid = pi/6 + pi/3
+	section 3: (2 pi/3)..pi     mid = pi/6 + 2 pi/3
+
+sub 1:
+	2 children
+	section: 0..(pi/3)
+	polar-coord: (2 * cos(pi/6), 2 * sin(pi/6))
+		55, 32
+	sub1-sections:
+		sub1-section1: 0..(pi/6)		mid = pi/12
+		sub1-section2: (pi/6)..(pi/3)	mid = pi/12 + pi/6
+
+sub 2:
+	3 children
+	section: (pi/3)..(2 pi/3) size: pi/6
+	polar-coord: (2 * cos(pi/6 + pi/3), 2 * sin(pi/6 + pi/3))
+		0, 64
+
+	sub2-sections:
+		sub2-section1: (pi/3)..(pi/3 + pi/9)				mid = pi/3 + pi/18
+		sub2-section2: (pi/3 + pi/9)..(pi/3 + 2 pi/9)		mid = pi/3 + pi/9 + pi/18
+		sub2-section3: (pi/3 + 2 pi/9)..(2 pi/3)			mid = pi/3 + 2 pi/9 + pi/18
+
+sub 3:
+	2 children
+	polar-coord: (2 * cos(pi/6 + 2 pi/3), 2 * sin(pi/6 + 2 pi/3))
+		-55, 32
+	sub3-sections:
+		sub3-section1: (2 pi/3)..(2 pi/3 + pi/6)		mid = 2 pi/3 + pi/12
+		sub3-section2: (2 pi/3 + pi/6)..(pi)			mid = 2 pi/3 + pi/6 + pi/12
+
+sub1-1:
+	section 0..(pi/6)
+	depth: 2 / sqrt(2 - 2 cos(pi/6)) = 3.86
+	polar-coord: (3.86 * cos(pi/12), 3.86 * sin(pi/12))
+		119
+		32
+
+sub1-2:
+	section (pi/6)..(pi/3)
+	depth: 2 / sqrt(2 - 2 cos(pi/6)) = 3.86
+	polar-coord: (3.86 * cos(pi/6 + pi/12), 3.86 * sin(pi/6 + pi/12))
+		87
+		87
+
+sub3-1:
+	section (2 pi/3)..(2 pi/3 + pi/6)
+	depth: 2 / sqrt(2 - 2 cos(pi/6)) = 3.86
+	polar-coord: (3.86 * cos(2 pi/3 + pi/12), 3.86 * sin(pi/3 + pi/12))
+		-87
+		87
+
+sub3-2:
+	section (2 pi/3 + pi/6)..(pi)
+	depth: 2 / sqrt(2 - 2 cos(pi/6)) = 3.86
+	polar-coord: (3.86 * cos(2 pi/3 + pi/6 + pi/12), 3.86 * sin(pi/3 + pi/6 + pi/12))
+		-119
+		32
+
+sub2-1:
+	section (pi/3)..(pi/3 + pi/9)
+	depth: 2 / sqrt(2 - 2 cos(pi/9)) = 5.76
+	polar-coord: (5.76 * cos(pi/3 + pi/18), 5.76 * sin(pi/3 + pi/18))
+		63
+		173
+
+sub2-2:
+	section (pi/3 + pi/9)..(pi/3 + 2 pi/9)
+	depth: 2 / sqrt(2 - 2 cos(pi/9)) = 5.76
+	polar-coord: (5.76 * cos(pi/3 + pi/9 + pi/18), 5.76 * sin(pi/3 + pi/9 + pi/18))
+		0
+		184
