@@ -1,12 +1,16 @@
-from zone import zRandom,zUnordered,zPrivate
+from zone import zRandom,zUnordered,zPrivate,zPublic
 from building import ManaRuby
 from spell import Spell
 from hook import Hookable
 from creature import move_creatures
 
+FOCUS_SIZE = 5
+
 class Mage(Hookable):
-	class Library(zRandom, zPrivate): pass
+	class Library(zUnordered, zPublic): pass
 	class Focused(zUnordered, zPrivate): pass
+	class Pool(zRandom, zPrivate): pass
+
 	def __init__(self, **kwargs):
 		super(Mage, self).__init__(**kwargs)
 		self.library = Mage.Library(owner=self)
@@ -14,10 +18,18 @@ class Mage(Hookable):
 
 		self.creatures = []
 
+	def build_pool(self):
+		pool = Mage.Pool(owner=self)
+		pool.extend(self.library)
+		(pool, ) = self.run_hook('pre-build-pool', pool)
+		assert isinstance(pool, Mage.Pool)
+		self.run_hook('post-build-pool', pool)
+
+		return pool
+
 	def focus(self):
-		self.library.add(self.focused)
-		self.focused.clear()
-		self.focused.add(self.library.get(5))
+		pool = self.build_pool()
+		self.focused[:] = pool.get(FOCUS_SIZE)
 
 	def focused_spells(self):
 		return [x for x in self.focused if isinstance(x,Spell)]

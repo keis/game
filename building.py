@@ -151,6 +151,7 @@ class ManaRuby(Building, Owned):
 
 		self._shards = [ManaRuby.ManaShard(capacity=self.shard_size, owner=self.owner) for x in range(self.shard_count)]
 		self.add_hook('pre-repair', lambda s, a: (s, a * 1.5) )
+		self.owner.add_hook('pre-build-pool', lambda z: z.add(self._shards))
 
 class SmallManaRuby(ManaRuby):
 	shard_count = 1
@@ -178,3 +179,4 @@ class Boulder(Building, Focusable):
 		super(Boulder, self).__init__(**kwargs)
 
 		self.add_hook('pre-repair', lambda s, a: (s, 0))
+		self.owner.add_hook('pre-build-pool', lambda z: z.add(self))
