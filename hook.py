@@ -24,15 +24,25 @@ class Hookable(object):
 
 def hook_caller(f, *args):
 	_args = f(*args)
-	if _args is not None:
-		return _args
-	return args
+
+	if _args is None:
+		return args
+
+	if len(args) == 1:
+		_args = (_args,)
+
+	return _args
 
 def global_hook_caller(f, target, *args):
 	_args = f(target, *args)
-	if _args is not None:
-		return _args
-	return args
+
+	if _args is None:
+		return args
+
+	if len(args) == 1:
+		_args = (_args,)
+
+	return _args
 
 class HookDB(defaultdict):
 	""" A database where each (Object,hook-string) gives a list of hooks to run.
