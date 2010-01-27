@@ -35,7 +35,8 @@ class UI(object):
 			'buildings' : lambda: list(self.player.core.network()),
 			'op-buildings' : lambda: list(self.opponent.core.network()),
 			'all-buildings' : lambda: self.context['buildings'] + self.context['op-buildings'],
-			'creatures' : lambda: player.creatures
+			'creatures' : lambda: player.creatures,
+			'-pool' : self.player.build_pool
 		})
 
 		hook_db[None]['post-repair'].append(self.heal_p)
