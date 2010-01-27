@@ -1,12 +1,12 @@
 from mage import Mage
 from spell import Spell, prepare_spell, focus_spell, magic_arrow, repair, summon, construct
-from building import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder,MagicShrine
-from creature import LizardDemon, Skeleton, Adventurer
+from building import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
+from creature import LizardDemon, Skeleton, Adventurer, Summoner
 from hook import HookDB
 
 spells = (prepare_spell, magic_arrow, focus_spell, repair, summon, construct)
-creatures = (LizardDemon, Skeleton, Adventurer)
-buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder, MagicShrine)
+creatures = (LizardDemon, Skeleton, Adventurer, Summoner)
+buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder)
 
 starting_spells = (prepare_spell, prepare_spell, prepare_spell,
 	summon, summon, summon,
@@ -20,6 +20,8 @@ def create_player():
 	rubies = [MediumManaRuby(owner=m, hook_db=hook_db) for x in range(4)]
 	m.core = Core(owner=m, hook_db=hook_db)
 	spells = [x(owner=m) for x in starting_spells]
+	m.library.add(spells)
+
 	map(m.core.connect, rubies)
 	m.focus()
 	players.append(m)
