@@ -2,6 +2,7 @@ from hook import Hookable
 from owned import Owned
 from error import IllegalMovement
 from zone import zUnordered,zPublic
+from channeler import Channeler
 import operator
 
 def friendly(a,b):
@@ -143,3 +144,14 @@ class Adventurer(Creature, Owned):
 	def __init__(self, **kwargs):
 		super(Adventurer, self).__init__(**kwargs)
 		self.add_hook('pre-gain-xp', lambda a: a * 1.5)
+
+from spell import summon
+class Summoner(Creature, Channeler):
+	base_atk = 10
+	base_def = 10
+	hp = 40
+	levels = ((10, 5, 5),)
+
+	def __init__(self, **kwargs):
+		super(Summoner, self).__init__(**kwargs)
+		self.add(summon(owner=self.owner))
