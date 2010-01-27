@@ -10,3 +10,7 @@ class Owned(object):
 		else:
 			pass
 			# some fancy logic
+
+def friendly(a,b):
+	return getattr(a, 'owner', None) == getattr(b, 'owner', None)
+

@@ -1,8 +1,8 @@
 from zone import zRandom,zUnordered,zPrivate,zPublic
-from building import ManaRuby
+from buildings import ManaRuby
 from spell import Spell
 from hook import Hookable
-from creature import move_creatures
+from act import move_creatures
 
 FOCUS_SIZE = 5
 

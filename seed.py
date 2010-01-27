@@ -1,7 +1,7 @@
 from mage import Mage
 from spell import Spell, prepare_spell, focus_spell, magic_arrow, repair, summon, construct
-from building import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
-from creature import LizardDemon, Skeleton, Adventurer, Summoner
+from buildings import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
+from creatures import LizardDemon, Skeleton, Adventurer, Summoner
 from hook import HookDB
 
 spells = (prepare_spell, magic_arrow, focus_spell, repair, summon, construct)
