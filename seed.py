@@ -1,11 +1,11 @@
 from mage import Mage
 from spell import Spell, prepare_spell, focus_spell, magic_arrow, repair, summon, construct
 from buildings import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
-from creatures import LizardDemon, Skeleton, Adventurer, Summoner
+from creatures import LizardDemon, Skeleton, Summoner
 from hook import HookDB
 
 spells = (prepare_spell, magic_arrow, focus_spell, repair, summon, construct)
-creatures = (LizardDemon, Skeleton, Adventurer, Summoner)
+creatures = (LizardDemon, Skeleton, Summoner)
 buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder)
 
 starting_spells = (prepare_spell, prepare_spell, prepare_spell,

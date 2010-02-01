@@ -6,34 +6,28 @@ class CreatureStack(zUnordered, zPublic): pass
 # This class makes sure pretty printing of creature-classes is done
 class CreatureMeta(type):
 	def __str__(self):
-		return '%s (%d/%d/%d) %d' % (self.__name__, self.base_atk, self.base_def, self.hp, self.cost)
+		return '%s (%d/%d/%d) %d' % (self.__name__, self.attack, self.defence, self.hp, self.cost)
 
 class Creature(Hookable):
 	__metaclass__ = CreatureMeta
-	base_atk = 0
-	base_def = 0
+	attack = 0
+	defence = 0
 	hp = 1
-	levels = ()
 	cost = 1
-	def __init__(self, damage = 0, xp = 0, position = None, **kwargs):
+	def __init__(self, damage = 0, position = None, **kwargs):
 		self.damage = damage
 		self.position = position
-		self.xp = xp
 		super(Creature, self).__init__(**kwargs)
 
-	def get_level_bonus(self):
-		for xp,a,d in self.levels[::-1]:
-			if xp <= self.xp:
-				return a,d
-		return 0,0
-
 	def get_attack(self):
-		a,d = self.get_level_bonus()
-		return self.base_atk + a
+		(attack,) = self.run_hook('pre-get-attack', self.attack)
+		self.run_hook('post-get-attack', attack)
+		return attack
 
 	def get_defence(self):
-		a,d = self.get_level_bonus()
-		return self.base_def + d
+		(defence,) = self.run_hook('pre-get-defence', self.defence)
+		self.run_hook('post-get-defence', defence)
+		return defence
 
 	def add_damage(self, amount):
 		self.damage += amount
@@ -45,15 +39,6 @@ class Creature(Hookable):
 			print "%s was healed for %s by %s" % (self, amount, source)
 			self.run_hook('post-heal', source, amount)
 		return source, amount
-
-	def gain_xp(self, amount):
-		amount = self.run_hook('pre-gain-xp', amount)
-		if amount:
-			self.xp += amount
-			self.run_hook('post-gain-xp', amount)
-
-	def give_xp(self):
-		return max(self.xp * 0.1, 10)
 
 	def move(self, building):
 		building = self.run_hook('pre-move', building)
