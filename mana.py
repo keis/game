@@ -22,3 +22,4 @@ for t in turns:
 	while ui.input() != False: pass
 
 	player.focus()
+	ui.active = False

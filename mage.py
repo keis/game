@@ -29,7 +29,10 @@ class Mage(Hookable):
 
 	def focus(self):
 		pool = self.build_pool()
-		self.focused[:] = pool.get(FOCUS_SIZE)
+		focused = pool.get(FOCUS_SIZE)
+		(pool, focused) = self.run_hook('pre-focus', pool, focused)
+		self.focused[:] = focused
+		self.run_hook('post-focus', pool, focused)
 
 	def focused_spells(self):
 		return [x for x in self.focused if isinstance(x,Spell)]

@@ -40,7 +40,7 @@ def spell(desc=None, cost = 1, tags = ()):
 @spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
 def prepare_spell(caster, spell=None):
 	"""Makes a new spell ready to be used"""
-	caster.library.add(spell(owner=caster))
+	caster.library.add(spell(owner=caster, hook_db = caster._hook_db))
 
 @spell(desc={'spell': ("the spell to focus", "library")}, cost = 2)
 def focus_spell(caster, spell=None):

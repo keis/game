@@ -161,8 +161,6 @@ class UI(object):
 			return
 
 	def done(self):
-		print 'done'
-		self.active = False
 		return False
 
 	def short_spell_list(self):
