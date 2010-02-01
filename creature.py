@@ -36,7 +36,6 @@ class Creature(Hookable):
 		source, amount = self.run_hook('pre-heal', source, amount)
 		if source and amount:
 			self.damage = max(self.damage - amount, 0)
-			print "%s was healed for %s by %s" % (self, amount, source)
 			self.run_hook('post-heal', source, amount)
 		return source, amount
 

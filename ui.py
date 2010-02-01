@@ -39,11 +39,21 @@ class UI(object):
 			'-pool' : self.player.build_pool
 		})
 
-		hook_db[None]['post-repair'].append(self.heal_p)
+		hook_db[None]['post-repair'].append(self.repair_p)
+		hook_db[None]['post-heal'].append(self.heal_p)
+		hook_db[None]['post-discard'].append(self.discard_p)
+
+	def repair_p(self, target, source, amount):
+		if self.active:
+			print "%s was repaired for %s by %s" % (self.view(target), amount, self.view(source))
 
 	def heal_p(self, target, source, amount):
 		if self.active:
-			print "%s was repaired for %s by %s" % (target, amount, source)
+			print "%s was healed for %s by %s" % (self.view(target), amount, self.view(source))
+
+	def discard_p(self, target):
+		if self.active:
+			print "%s was discarded" % self.view(target)
 
 	def view(self, obj, **kwargs):
 		return view_db[obj](self.player, obj, **kwargs)

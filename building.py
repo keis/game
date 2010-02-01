@@ -107,12 +107,12 @@ class Building(Tree, Hookable):
 		return source, amount
 
 	def heal(self, source, amount):
-		source, amount = self.run_hook('pre-heal', source, amount)
+		#source, amount = self.run_hook('pre-heal', source, amount)
 		if source and amount:
 			for x in self.units:
 				if friendly(self, x):
 					x.heal(source, amount)
-			self.run_hook('post-heal', source, amount)
+		#	self.run_hook('post-heal', source, amount)
 		return source, amount
 
 	def get_defenders(self):

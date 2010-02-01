@@ -1,7 +1,8 @@
 from owned import Owned
+from hook import Hookable
 from error import AlreadyFocusedError,NotFocusedError
 
-class Focusable(Owned):
+class Focusable(Owned, Hookable):
 	def __init__(self, tags = (), **kwargs):
 		super(Focusable, self).__init__(**kwargs)
 		self.tags = tags
@@ -17,5 +18,6 @@ class Focusable(Owned):
 		self.owner.focused.remove(self)
 
 	def discard(self):
-		# should have diffrent triggers
+		self.run_hook('pre-discard')
 		self.unfocus()
+		self.run_hook('post-discard')
