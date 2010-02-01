@@ -28,7 +28,7 @@ class ManaRuby(Building, Owned):
 	def __init__(self, **kwargs):
 		super(ManaRuby, self).__init__(**kwargs)
 
-		self._shards = [ManaRuby.ManaShard(capacity=self.shard_size, owner=self.owner, hook_db=self._hook_db) for x in range(self.shard_count)]
+		self._shards = [ManaRuby.ManaShard(capacity=self.shard_size, owner=self.owner) for x in range(self.shard_count)]
 		self.add_hook('pre-repair', lambda s, a: (s, a * 1.5) )
 		self.owner.add_hook('pre-build-pool', lambda z: z.add(self._shards))
 

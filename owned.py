@@ -2,6 +2,10 @@ from hook import Hookable
 
 class Owned(Hookable):
 	def __init__(self, owner=None, **kwargs):
+		# A little trick to avoid passing around hook_db 
+		if 'hook_db' not in kwargs and owner is not None:
+			kwargs['hook_db'] = owner._hook_db
+
 		super(Owned, self).__init__(**kwargs)
 		self.owner = owner
 

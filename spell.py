@@ -40,7 +40,7 @@ def spell(desc=None, cost = 1, tags = ()):
 @spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
 def prepare_spell(caster, spell=None):
 	"""Makes a new spell ready to be used"""
-	caster.library.add(spell(owner=caster, hook_db = caster._hook_db))
+	caster.library.add(spell(owner=caster))
 
 @spell(desc={'spell': ("the spell to focus", "library")}, cost = 2)
 def focus_spell(caster, spell=None):
@@ -58,7 +58,7 @@ def repair(caster, building=None):
 def construct(caster, building_type=None, pad=None):
 	cost = building_type.cost - 1
 	if caster.discard(cost, tag='create'):
-		building = building_type(owner=caster, hook_db = caster._hook_db)
+		building = building_type(owner=caster)
 		parent,pos = pad
 		parent.connect(building, pos)
 
@@ -69,7 +69,7 @@ def construct(caster, building_type=None, pad=None):
 def summon(caster, creature_type=None, building=None):
 	cost = creature_type.cost - 1
 	if caster.discard(cost, tag='create'):
-		creature = creature_type(owner=caster, position=building, hook_db = caster._hook_db)
+		creature = creature_type(owner=caster, position=building)
 		building.add_creature(creature)
 		caster.creatures.append(creature)
 
