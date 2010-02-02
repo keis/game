@@ -54,7 +54,8 @@ class BuildingMeta(type):
 
 class Building(Tree, Hookable):
 	__metaclass__ = BuildingMeta
-	hp = 1
+	hp = 100
+	defence = 10
 	cost = 1
 	def __init__(self, damage = 0, **kwargs):
 		super(Building, self).__init__(**kwargs)
@@ -115,6 +116,9 @@ class Building(Tree, Hookable):
 		#	self.run_hook('post-heal', source, amount)
 		return source, amount
 
+	def get_defence_bonus(self):
+		return self.defence
+
 	def get_defenders(self):
 		# Maybe allow some teleport dude to defend at all buildings..
 		defenders = [x for x in self.units if friendly(self, x)]
@@ -122,3 +126,11 @@ class Building(Tree, Hookable):
 		self.run_hook('post-defenders', defenders)
 		return defenders
 
+	def get_attackers(self):
+		attackers = [x for x in self.units if not friendly(self, x)]
+		(attackers,) = self.run_hook('pre-attackers', attackers)
+		self.run_hook('post-attackers', attackers)
+		return attackers
+
+	def is_battle_zone(self):
+		return any(not friendly(self, x) for x in self.units)

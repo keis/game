@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from seed import players,spells,create_player,hook_db
 from ui import UI
+import act
 
 for x in range(2):
 	create_player()
@@ -20,6 +21,15 @@ for t in turns:
 	hook_db.run_hook(None, 'start-of-turn', player)
 
 	while ui.input() != False: pass
+
+	for p in players:
+		battles = [x for x in p.core.network() if x.is_battle_zone()]
+		if len(battles) > 0:
+			for x in battles:
+				print 'battle @ %s' % x
+				act.battle(x)
+		else:
+			print "no battles in %s territory" % p
 
 	player.focus()
 	ui.active = False
