@@ -1,0 +1,35 @@
+Core Tower:
+	LEAFS: 3
+	HP: 6000
+	DEF: 20
+	* if lost, the player loses the game
+	* at the start of the turn a AOE HEAL (-20%) of 10 (?) is issued
+	* at the start of the turn a AOE REPAIR (-20%) of 100 is issued
+
+Mana Ruby (small/medium/large):
+	LEAFS: 2
+	HP: 2000
+	DEF: 3
+	* places 1/2/3 'mana shards' with 5/8/10 (?) in the POOL
+	* receives an additional 50% from repairs
+
+Boulder:
+	LEAFS: 1
+	HP: 8000
+	DEF: 100
+	* places 1 boulder in the POOL (which does nothing)
+	* IMPASSABLE, no unit may move through or to this building
+	* is not affected by REPAIR
+	* reduces all AOE and LINE EFFECTS passing by 40% (after normal scaling)
+
+Magic Amplifier:
+	LEAFS: 2
+	HP: 500
+	DEF: 2
+	* Increases passing LINE EFFECTS power by 100 (after normal scaling)
+
+Magic Launcher:
+	LEAFS: 3
+	HP: 700
+	DEF: 4
+	* if used as end-node for a LE inc. power by 100% (after normal scaling)

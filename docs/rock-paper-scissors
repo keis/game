@@ -1,0 +1,17 @@
+A rock/paper/scissors situation is aimed for between the three main tactics.
+
+Spells beats Creatures
+Creatures beats Buildings
+Buildings beats Spells
+
+A spell based tactic is one where the main damage is dealt by casting spells to
+	both units and buildings.
+A creature based tactic is one where you summon lots of creatures or a few
+	powerful ones and attack to bring down buildings.
+A building based tactic is not as intuitive as the others. Buildings are
+	passive in their nature only boosting units or spells. A tactic built around
+	constructing buildings to give a huge boost to a small amount of units and/or
+	is considered a building based tactic.
+
+The goal of this layout is to force players into a more varied tactic as
+limiting yourself to only one tactic will to easily be countered.

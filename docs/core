@@ -1,0 +1,40 @@
+1v1 turn based game
+
+each player builds a base as a tree from the root (The Tower) by placing new
+nodes (buildings). Each building type has a predefined number child nodes.
+	Two basic actions exist; casting a spell and ordering unit -movement/attack
+which can be performed in any number and any order per turn. However a unit may
+only move once and a limited amount of mana and focused spells limits the number
+of actions.
+
+The LIBRARY consist of the spells the player have prepared and any tools put there
+by buildings or units. At the start of the game and at the END of each players
+turn 5 random items are put into focus. At the start of each players turn all
+mana shards in focus will be converted to mana to be used for the turn. The
+shards will still stay in focus but have no other effect. When a focused spell
+is cast it will be removed from focus. Items may also be removed from focus by a
+DISCARD effect. When a item loses focus it's re-added to the library.
+
+Area of effect (AOE) applies a effect to a node and its child nodes with a per
+effect specific reducing per step.
+E.G Core Tower repair (100,-20%):
+	consider a tree: Tower -> Mana Ruby 1 -> Boulder -> House 1
+						   -> Mana Ruby 2 -> House 2 -> House 3
+	Core Tower will regain 100 HP (100)
+	Mana Ruby 1 and 2 will regain 80 + 40 = 120 HP (80)
+	Boulder will receive 0 HP (64)
+	House 1 will regain 30 HP
+	House 2 will regain 64 HP
+	House 3 will regain 51 HP
+
+Line effect (LE) applies a effect to a node and all nodes between and including a
+leaf node in the start nodes subtree. With a possible reduce/increase for each
+step.
+E.G Super Mega Magic Nuke (100, +50%)
+	LOL NAMES
+	consider a tree Tower -> Mana Ruby -> Magic Amplifier -> House -> Magic Launcher
+	power at tower: 100
+	at mana ruby: 100 + 50 = 150
+	at magic amp.: 150 + 75 + 100 = 325
+	at house: 325 + 487
+	at launcher: 730.5 + 730.5 = 1461
