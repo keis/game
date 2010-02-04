@@ -61,6 +61,7 @@ def construct(caster, building_type=None, pad=None):
 		building = building_type(owner=caster)
 		parent,pos = pad
 		parent.connect(building, pos)
+		caster.add_building(building)
 
 @spell(desc={
 		'creature_type': ("the kind of creature to summon", "creature_types"),
@@ -71,7 +72,7 @@ def summon(caster, creature_type=None, building=None):
 	if caster.discard(cost, tag='create'):
 		creature = creature_type(owner=caster, position=building)
 		building.add_creature(creature)
-		caster.creatures.append(creature)
+		caster.add_creature(creature)
 
 
 

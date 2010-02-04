@@ -85,6 +85,15 @@ class Building(Tree, Hookable):
 
 	def add_damage(self, amount):
 		self.damage += amount
+		if self.damage >= self.hp:
+			self.destroy()
+
+	def destroy(self):
+		self.run_hook('pre-destroy')
+		print 'Building.destroy STUB'
+		# TODO, replace building with a ruin
+		self.run_hook('post-destroy')
+		self._cleanup()
 
 	def remove_creature(self, creature):
 		(creature,) = self.run_hook('pre-remove-creature', creature)
@@ -134,3 +143,6 @@ class Building(Tree, Hookable):
 
 	def is_battle_zone(self):
 		return any(not friendly(self, x) for x in self.units)
+
+	def _cleanup(self):
+		pass

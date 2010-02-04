@@ -22,6 +22,10 @@ class Hookable(object):
 	def run_hook(self, key, *args):
 		return self._hook_db.run_hook(self, key, *args)
 
+	def _cleanup(self):
+		super(Hookable, self)._cleanup()
+		self.clear_hooks()
+
 def hook_caller(f, *args):
 	_args = f(*args)
 
@@ -44,6 +48,8 @@ def global_hook_caller(f, target, *args):
 
 	return _args
 
+# to simplify the cleanup of objects consider adding a 'controller' of a hook
+# and a way to clean all hooks with a given controller
 class HookDB(defaultdict):
 	""" A database where each (Object,hook-string) gives a list of hooks to run.
 	the use of None as Object is treated as a hook to be applied to all objects and

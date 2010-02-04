@@ -29,7 +29,7 @@ def create_player():
 	players.append(m)
 
 	l = ManaEater(owner=m, hook_db=hook_db, position=m.core)
-	m.creatures.append(l)
+	m.add_creature(l)
 	m.core.add_creature(l)
 
 	m.focus()

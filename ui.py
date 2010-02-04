@@ -114,7 +114,15 @@ class UI(object):
 		if index is None:
 			print self.view(things, enumerate=True, newline_sep=True)
 		else:
-			obj = things[int(index)]
+			try:
+				obj = things[int(index)]
+			except ValueError:
+				print "That's not a valid building name"
+				return
+			except IndexError:
+				print "There is no such building"
+				return
+
 			print self.view(obj, long=True)
 
 	def move(self, *args):

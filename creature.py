@@ -31,6 +31,16 @@ class Creature(Hookable):
 
 	def add_damage(self, amount):
 		self.damage += amount
+		if self.damage >= self.hp:
+			self.destroy()
+
+	def destroy(self):
+		self.run_hook('pre-destroy')
+		self.position.remove_creature(self)
+		if hasattr(self, 'owner'):
+			self.owner.remove_creature(self)
+		self.run_hook('post-destroy')
+		self._cleanup()
 
 	def heal(self, source, amount):
 		source, amount = self.run_hook('pre-heal', source, amount)
@@ -43,3 +53,6 @@ class Creature(Hookable):
 		building = self.run_hook('pre-move', building)
 		building.add_creature(self)
 		self.run_hook('post-move', building)
+
+	def _cleanup(self):
+		pass

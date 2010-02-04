@@ -16,7 +16,18 @@ class Mage(Hookable):
 		self.library = Mage.Library(owner=self)
 		self.focused = Mage.Focused(owner=self)
 
+		# replace with set of all owned stuff?
 		self.creatures = []
+		self.buildings = []
+
+	def add_creature(self, creature):
+		self.creatures.append(creature)
+
+	def remove_creature(self, creature):
+		self.creatures.remove(creature)
+
+	def add_building(self, building):
+		self.buildings.add(building)
 
 	def build_pool(self):
 		pool = Mage.Pool(owner=self)
