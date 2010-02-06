@@ -1,5 +1,5 @@
 from mage import Mage
-from spell import Spell, prepare_spell, focus_spell, magic_arrow, repair, summon, construct
+from spells import prepare_spell, focus_spell, fire_storm, repair, summon, construct
 from buildings import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
 from creatures import LizardDemon, Skeleton, Summoner, ManaEater
 from hook import HookDB
@@ -7,7 +7,7 @@ from hook import HookDB
 import random
 random.seed()
 
-spells = (prepare_spell, magic_arrow, focus_spell, repair, summon, construct)
+spells = (prepare_spell, focus_spell, repair, summon, construct)
 creatures = (LizardDemon, Skeleton, Summoner, ManaEater)
 buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder)
 
