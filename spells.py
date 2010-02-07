@@ -37,3 +37,17 @@ def summon(caster, creature_type=None, building=None):
 		creature = creature_type(owner=caster, position=building)
 		building.add_creature(creature)
 		caster.add_creature(creature)
+
+#TODO, reduced repair for 3(?) turns
+# need a way to clear hooks.
+# and a 'timer'
+@spell(desc={
+		'building': ("The building to initiate the fire storm at", "op_buildings")
+	}, cost=10)
+def fire_storm(caster, building=None):
+	def _fire_storm(b, power):
+		b.add_damage(power)
+		for u in b.units:
+			u.add_damage(power * 0.2)
+		
+	building.apply_aoe(_fire_storm, lambda c, x: x * 0.8, 100)

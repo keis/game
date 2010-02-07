@@ -33,10 +33,11 @@ class UI(object):
 			'building_types' : lambda: buildings,
 			'creature_types' : lambda: creatures,
 			'buildings' : lambda: list(self.player.core.network()),
-			'op-buildings' : lambda: list(self.opponent.core.network()),
-			'all-buildings' : lambda: self.context['buildings'] + self.context['op-buildings'],
+			'op_buildings' : lambda: list(self.opponent.core.network()),
+			'all_buildings' : lambda: self.context['buildings'] + self.context['op-buildings'],
 			'creatures' : lambda: player.creatures,
-			'-pool' : self.player.build_pool
+			'op_creatures' : lambda: self.opponent.creatures,
+			'_pool' : self.player.build_pool
 		})
 
 		hook_db[None]['post-repair'].append(self.repair_p)
