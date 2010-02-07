@@ -39,10 +39,9 @@ class UI(object):
 			'op_creatures' : lambda: self.opponent.creatures,
 			'_pool' : self.player.build_pool
 		})
-
-		hook_db[None]['post-repair'].append(self.repair_p)
-		hook_db[None]['post-heal'].append(self.heal_p)
-		hook_db[None]['post-discard'].append(self.discard_p)
+		hook_db.hook(None, 'post-repair', self.repair_p)
+		hook_db.hook(None, 'post-heal', self.heal_p)
+		hook_db.hook(None, 'post-discard', self.discard_p)
 
 	def repair_p(self, target, source, amount):
 		if self.active:

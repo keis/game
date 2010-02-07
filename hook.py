@@ -8,7 +8,7 @@ class Hookable(object):
 
 	def __hook(self, obj, key, func, *bargs):
 		func = partial(func, *bargs)
-		self._hook_db[obj][key].append(func)
+		self._hook_db.hook(obj, key, func)
 
 	def add_hook(self, *args):
 		self.__hook(self, *args)
@@ -58,6 +58,33 @@ class HookDB(defaultdict):
 	def __init__(self):
 		defaultdict.__init__(self, HookDB.hook_dict)
 
+	def hook(self, target, key, func, owner=None):
+		owner = owner or target
+		if owner is not None:
+			try:
+				owner.__hooks
+			except AttributeError:
+				owner.__hooks = []
+			owner.__hooks.append((target,key))
+		self[target][key].append((func, owner))
+
+	# Clear all hooks matching target, key and owner (which defaults to target)
+	def clear_hook(self, target, key, owner=None):
+		owner = owner or target
+		hooks = [(f,o) for f,o in self.get_hooks(target, key) if o != owner]
+		self[target][key] = hooks
+
+	def clear_owned_hooks(self, owner):
+		try:
+			hooks = owner.__hooks
+		except AttributeError:
+			return
+
+		for t,k in hooks:
+			self.clear_hook(t, k, owner)
+
+		owner.__hooks = []
+			
 	def get_hooks(self, target, key):
 		# use get to avoid creating lots of empty lists in the db
 		return self.get(target, {}).get(key, [])
@@ -65,17 +92,18 @@ class HookDB(defaultdict):
 	def __run_global_hook(self, target, key, *args):
 		"""Runs all global hooks for @key (hooked to None). callbacks should take
 		an additional first argument that is the subject which should NOT be returned."""
-		for f in self.get_hooks(None, key):
+		for f,o in self.get_hooks(None, key):
 			args = global_hook_caller(f, target, *args)
 		return args
 
 	def run_hook(self, target, key, *args):
 		"""Runs all hooks for @key on @target, callbacks should return the arguments which is allowed
 		to be modified or return None."""
+		#print 'run_hook', target, key
 		if target is None:
 			return self.__run_global_hook(None, key, *args)
 
-		for f in self.get_hooks(target, key):
+		for f,o in self.get_hooks(target, key):
 			args = hook_caller(f, *args)
 
 		# Run global hooks too
