@@ -66,8 +66,8 @@ class Building(Tree, Hookable):
 		def _apply_aoe(current, power):
 			f(current, power)
 			power = power_f(current, power)
-			(power,) = self.run_hook('pre-aoe-scale', power)
-			self.run_hook('post-aoe-scale', power)
+			(power,) = current.run_hook('pre-aoe-scale', power)
+			current.run_hook('post-aoe-scale', power)
 			return power
 
 		self.dft_fold(_apply_aoe, power)
@@ -76,8 +76,8 @@ class Building(Tree, Hookable):
 		def apply_path(current, path, power):
 			f(current, power)
 			power = power_f(current, power)
-			(power,) = self.run_hook('pre-line-scale', power)
-			self.run_hook('post-line-scale', power)
+			(power,) = current.run_hook('pre-line-scale', power)
+			current.run_hook('post-line-scale', power)
 			apply_path(current.pads[path[0]], path[1:], power)
 			
 		path = self.find(target)
