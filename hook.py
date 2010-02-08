@@ -6,15 +6,15 @@ class Hookable(object):
 		self._hook_db = hook_db
 		super(Hookable, self).__init__(**kwargs)
 
-	def __hook(self, obj, key, func, *bargs):
+	def __hook(self, obj, key, func, *bargs, **kwargs):
 		func = partial(func, *bargs)
-		self._hook_db.hook(obj, key, func)
+		self._hook_db.hook(obj, key, func, owner=kwargs.get('owner', self))
 
-	def add_hook(self, *args):
-		self.__hook(self, *args)
+	def add_hook(self, *args, **kwargs):
+		self.__hook(self, *args, **kwargs)
 
-	def add_global_hook(self, *args):
-		self.__hook(None, *args)
+	def add_global_hook(self, *args, **kwargs):
+		self.__hook(None, *args, **kwargs)
 
 	def clear_hooks(self):
 		del self._hook_db[self]
@@ -25,6 +25,7 @@ class Hookable(object):
 	def _cleanup(self):
 		super(Hookable, self)._cleanup()
 		self.clear_hooks()
+		self._hook_db.clear_owned_hooks(self)
 
 def hook_caller(f, *args):
 	_args = f(*args)
