@@ -1,4 +1,4 @@
-from spell import spell
+from spell import spell,SpellToken
 import effects
 
 @spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
@@ -38,16 +38,23 @@ def summon(caster, creature_type=None, building=None):
 		building.add_creature(creature)
 		caster.add_creature(creature)
 
-#TODO, reduced repair for 3(?) turns
-# need a way to clear hooks.
-# and a 'timer'
 @spell(desc={
 		'building': ("The building to initiate the fire storm at", "op_buildings")
 	}, cost=10)
 def fire_storm(caster, building=None):
+	def timer(_x, player):
+		t.counter += 1
+		if t.counter >= 3:
+			t.destroy()
+
+	t = SpellToken(owner=caster)
+	t.counter = 0
+	t.add_global_hook('start-of-turn', timer)
 	def _fire_storm(b, power):
 		b.add_damage(power)
+		b.add_hook('pre-repair', lambda s,a: (s, a * 0.5), owner=t)
 		for u in b.units:
 			u.add_damage(power * 0.2)
+			u.add_hook('pre-heal', lambda s,a: (s, a * 0.5), owner=t)
 		
 	building.apply_aoe(_fire_storm, lambda c, x: x * 0.8, 100)

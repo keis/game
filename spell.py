@@ -1,4 +1,5 @@
 from focusable import Focusable
+from owned import Owned
 
 # This class makes sure pretty printing of spell-classes is done
 class SpellMeta(type):
@@ -21,6 +22,13 @@ class Spell(Focusable):
 
 	def __str__(self):
 		return '%s (%d)' % (self._name, self._cost)
+
+class SpellToken(Owned):
+	def __init__(self, **kwargs):
+		super(SpellToken, self).__init__(**kwargs)
+
+	def destroy(self):
+		self._cleanup()
 
 def spell(desc=None, cost = 1, tags = ()):
 	def spell_i(func):
