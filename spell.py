@@ -30,6 +30,18 @@ class SpellToken(Owned):
 	def destroy(self):
 		self._cleanup()
 
+class Timer(SpellToken):
+	def __init__(self, target=0, hook='start-of-turn', **kwargs):
+		super(Timer, self).__init__(**kwargs)
+		self.counter = 0
+		self.target = target
+		self.add_global_hook(hook, self.__cb)
+
+	def __cb(self, *any):
+		self.counter += 1
+		if self.counter == self.target:
+			self.destroy()
+
 def spell(desc=None, cost = 1, tags = ()):
 	def spell_i(func):
 		class _Spell(Spell):

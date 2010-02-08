@@ -1,4 +1,4 @@
-from spell import spell,SpellToken
+from spell import spell,Timer
 import effects
 
 @spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
@@ -42,14 +42,8 @@ def summon(caster, creature_type=None, building=None):
 		'building': ("The building to initiate the fire storm at", "op_buildings")
 	}, cost=10)
 def fire_storm(caster, building=None):
-	def timer(_x, player):
-		t.counter += 1
-		if t.counter >= 3:
-			t.destroy()
+	t = Timer(owner=caster, target=3)
 
-	t = SpellToken(owner=caster)
-	t.counter = 0
-	t.add_global_hook('start-of-turn', timer)
 	def _fire_storm(b, power):
 		b.add_damage(power)
 		b.add_hook('pre-repair', lambda s,a: (s, a * 0.5), owner=t)
