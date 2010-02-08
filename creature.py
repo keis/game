@@ -55,4 +55,6 @@ class Creature(Hookable):
 		self.run_hook('post-move', building)
 
 	def _cleanup(self):
-		pass
+		try: cleanup = super(Creature, self)._cleanup
+		except AttributeError: pass
+		else: cleanup()

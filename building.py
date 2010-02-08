@@ -145,4 +145,6 @@ class Building(Tree, Hookable):
 		return any(not friendly(self, x) for x in self.units)
 
 	def _cleanup(self):
-		pass
+		try: cleanup = super(Building, self)._cleanup
+		except AttributeError: pass
+		else: cleanup()

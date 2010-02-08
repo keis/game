@@ -17,13 +17,17 @@ class Hookable(object):
 		self.__hook(None, *args, **kwargs)
 
 	def clear_hooks(self):
-		del self._hook_db[self]
+		if self in self._hook_db:
+			del self._hook_db[self]
 
 	def run_hook(self, key, *args):
 		return self._hook_db.run_hook(self, key, *args)
 
 	def _cleanup(self):
-		super(Hookable, self)._cleanup()
+		try: cleanup = super(Hookable, self)._cleanup
+		except AttributeError: pass
+		else: cleanup()
+
 		self.clear_hooks()
 		self._hook_db.clear_owned_hooks(self)
 
