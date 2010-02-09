@@ -1,0 +1,47 @@
+a building X with child nodes is destroyed.
+
+1)
+	all child nodes are destroyed as well
+
+	possibly overpowered punishment for having a building destroyed
+		give defence boost to buildings with child nodes?
+		make it cheap/easy to construct new buildings?
+
+2)
+	all child nodes are attached to the parent of X
+
+	what if there is no room?
+		a) try to move even higher up in the heirarchy (not always possible)
+		b) attach to one of the other child nodes
+		
+		in both cases the result is a bit confusing and planning for this effect
+	will require much thought
+
+	no additional punishment for having a building destroyed
+3)
+	X is replaced with a placeholder, a ruin, and childnodes are kept in place
+
+	little to no extra punishment for having a building destroyed
+
+	possible to rebuild?
+		nope
+			fills tree with lots of useless placeholders
+			puts new buildings further away from core => reduced healing etc
+			
+		only the same building
+			very limiting, discourages adapting of tactic
+
+		any building
+			keep number of pads from original building
+				possible to get around high-pad count nerf by building on top of a ruin
+
+			only allow buildings with the same number of pads
+				non obvious limitation (need fluff)
+				limiting
+			
+			allow buildings with the same or lower number of pads. use number of pads from original
+				non obvious limitation (need fluff)
+				not-very limiting
+
+			use pads from new building
+				what about child nodes when fewer pads
