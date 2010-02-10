@@ -3,19 +3,8 @@ from textview import db as view_db
 from error import GameError
 
 class provider(dict):
-	def __init__(self):
-		self.__cache = {}
-
-	def clear_cache(self):
-		self.__cache = {}
-
 	def __getitem__(self, key):
-		try:
-			return self.__cache[key]
-		except KeyError:
-			f = dict.__getitem__(self, key)
-			v = self.__cache[key] = f()
-			return v
+		return dict.__getitem__(self, key)()
 
 class UI(object):
 	def __init__(self, player, opponent):
@@ -34,7 +23,7 @@ class UI(object):
 			'creature_types' : lambda: creatures,
 			'buildings' : lambda: list(self.player.core.network()),
 			'op_buildings' : lambda: list(self.opponent.core.network()),
-			'all_buildings' : lambda: self.context['buildings'] + self.context['op-buildings'],
+			'all_buildings' : lambda: self.context['buildings'] + self.context['op_buildings'],
 			'creatures' : lambda: player.creatures,
 			'op_creatures' : lambda: self.opponent.creatures,
 			'_pool' : self.player.build_pool
@@ -42,6 +31,7 @@ class UI(object):
 		hook_db.hook(None, 'post-repair', self.repair_p)
 		hook_db.hook(None, 'post-heal', self.heal_p)
 		hook_db.hook(None, 'post-discard', self.discard_p)
+		hook_db.hook(None, 'post-add-damage', self.add_damage_p)
 
 	def repair_p(self, target, source, amount):
 		if self.active:
@@ -50,6 +40,10 @@ class UI(object):
 	def heal_p(self, target, source, amount):
 		if self.active:
 			print "%s was healed for %s by %s" % (self.view(target), amount, self.view(source))
+
+	def add_damage_p(self, target, amount):
+		if self.active:
+			print "%s was dealt %s damage" % (self.view(target), amount)
 
 	def discard_p(self, target):
 		if self.active:
@@ -65,7 +59,6 @@ class UI(object):
 			print '%s (%s):' % (k,v)
 			if s is None:
 				p = stuff
-			self.context.clear_cache()
 			p = eval(s, self.context)
 			print self.view(p, enumerate=True, newline_sep=True)
 
@@ -135,7 +128,7 @@ class UI(object):
 
 		try:
 			if len(target) == 2:
-				all_buildings = self.context['%s-buildings' % target[0]]
+				all_buildings = self.context['%s_buildings' % target[0]]
 				target = int(target[1])
 			else:
 				all_buildings = self.context['buildings']
