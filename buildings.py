@@ -12,7 +12,13 @@ class Core(Building, Owned):
 			if player == self.owner:
 				effects.repair(self,self)
 				effects.heal(self,self)
+
+		def destroy_hook():
+			print 'STUB: core destroy_hook'
+			raise Exception("%s has lost the game" % self.owner)
+
 		self.add_global_hook('start-of-turn', start_hook)
+		self.add_hook('post-destroy', destroy_hook)
 
 class ManaRuby(Building, Owned):
 	npads = 2

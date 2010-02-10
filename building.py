@@ -47,6 +47,13 @@ class Tree(object):
 		children = [x for x in self.pads if x is not None]
 		return map(lambda x: x.dft_fold(func, v), children)
 
+	def _cleanup(self):
+		try: cleanup = super(Tree, self)._cleanup
+		except AttributeError: pass
+		else: cleanup()
+
+		self.parent.pads = [x if x != self else None for x in self.parent.pads]
+
 # This class makes sure pretty printing of building-classes is done
 class BuildingMeta(type):
 	def __str__(self):
@@ -89,11 +96,29 @@ class Building(Tree, Hookable):
 			self.destroy()
 
 	def destroy(self):
+		# the exact actions taken here is subject to change!
 		self.run_hook('pre-destroy')
-		print 'Building.destroy STUB'
-		# TODO, replace building with a ruin
+
+		# destroy all child nodes
+		for x in self.pads:
+			if x is not None:
+				x.destroy()
+
+		if hasattr(self, 'owner'):
+			self.owner.remove_building(self)
+
+		print '%s was destroyed' % self
 		self.run_hook('post-destroy')
+
+		# move all units to parent (bypassing normal movement rules)
+		# This will emit alot of add-creature. dunno if that is wanted
+		for x in self.units:
+			x.position = self.parent
+			self.parent.add_creature(x)
+
 		self._cleanup()
+
+		print list(self.parent.network())
 
 	def remove_creature(self, creature):
 		(creature,) = self.run_hook('pre-remove-creature', creature)
@@ -148,3 +173,5 @@ class Building(Tree, Hookable):
 		try: cleanup = super(Building, self)._cleanup
 		except AttributeError: pass
 		else: cleanup()
+
+		self.units[:] = []

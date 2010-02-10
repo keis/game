@@ -27,7 +27,10 @@ class Mage(Hookable):
 		self.creatures.remove(creature)
 
 	def add_building(self, building):
-		self.buildings.add(building)
+		self.buildings.append(building)
+
+	def remove_building(self, building):
+		self.buildings.remove(building)
 
 	def build_pool(self):
 		pool = Mage.Pool(owner=self)
