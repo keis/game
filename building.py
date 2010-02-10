@@ -108,7 +108,6 @@ class Building(Tree, Hookable):
 		if hasattr(self, 'owner'):
 			self.owner.remove_building(self)
 
-		print '%s was destroyed' % self
 		self.run_hook('post-destroy')
 
 		# move all units to parent (bypassing normal movement rules)
@@ -118,8 +117,6 @@ class Building(Tree, Hookable):
 			self.parent.add_creature(x)
 
 		self._cleanup()
-
-		print list(self.parent.network())
 
 	def remove_creature(self, creature):
 		(creature,) = self.run_hook('pre-remove-creature', creature)

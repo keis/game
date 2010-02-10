@@ -32,6 +32,7 @@ class UI(object):
 		hook_db.hook(None, 'post-heal', self.heal_p)
 		hook_db.hook(None, 'post-discard', self.discard_p)
 		hook_db.hook(None, 'post-add-damage', self.add_damage_p)
+		hook_db.hook(None, 'post-destroy', self.destroy_p)
 
 	def repair_p(self, target, source, amount):
 		if self.active:
@@ -48,6 +49,10 @@ class UI(object):
 	def discard_p(self, target):
 		if self.active:
 			print "%s was discarded" % self.view(target)
+
+	def destroy_p(self, target):
+		if self.active:
+			print "%s was destroyed" % self.view(target)
 
 	def view(self, obj, **kwargs):
 		return view_db[obj](self.player, obj, **kwargs)
