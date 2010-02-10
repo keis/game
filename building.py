@@ -91,12 +91,13 @@ class Building(Tree, Hookable):
 		apply_path(self, path, power)
 
 	def add_damage(self, amount):
+		(amount,) = self.run_hook('pre-add-damage', amount)
 		self.damage += amount
+		self.run_hook('post-add-damage', amount)
 		if self.damage >= self.hp:
 			self.destroy()
 
 	def destroy(self):
-		# the exact actions taken here is subject to change!
 		self.run_hook('pre-destroy')
 
 		# destroy all child nodes

@@ -30,7 +30,9 @@ class Creature(Hookable):
 		return defence
 
 	def add_damage(self, amount):
+		(amount,) = self.run_hook('pre-add-damage', amount)
 		self.damage += amount
+		self.run_hook('post-add-damage', amount)
 		if self.damage >= self.hp:
 			self.destroy()
 
