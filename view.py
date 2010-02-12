@@ -9,13 +9,10 @@ class View(object):
 # builds a list of all classes in a inheritance tree using the same ordering as name lookup in python
 def classes(cls):
 	list = [cls]
-	for x in cls.__bases__:
-		list += classes(x)
-	
-	foo = {}
-	for x in list:
-		foo[x] = None
-	return foo.keys()
+	for cls in list:
+		list.extend([base for base in cls.__bases__ if base not in list])
+
+	return list
 
 class ViewDB(dict):
 	def __getitem__(self, obj):
