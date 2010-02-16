@@ -24,13 +24,13 @@
 	</html>
 </xsl:template>
 
-<xsl:template match="building" name="building">
-	<xsl:param name="limit0" select="0"/>
-	<xsl:param name="limit1" select="$pi"/>
+<xsl:template name="calculate-depth">
+	<!-- 2 / (2 - (2 cos width)) -->
+	<xsl:param name="width"/> <!-- width in radians -->
 
 	<xsl:variable name="_tmp1">
 		<xsl:call-template name="cos">
-			<xsl:with-param name="pX" select="$limit1 - $limit0"/>
+			<xsl:with-param name="pX" select="$width"/>
 		</xsl:call-template>
 	</xsl:variable>
 
@@ -41,8 +41,32 @@
 		</xsl:call-template>
 	</xsl:variable>
 
+	<xsl:value-of select="2.0 div $_tmp2"/>
+</xsl:template>
+
+<xsl:template match="building" name="building">
+	<xsl:param name="limit0" select="0"/>
+	<xsl:param name="limit1" select="$pi"/>
+	<!-- minimum depth required to not cut parent node -->
+	<xsl:param name="min_depth" select="0"/>
+
 	<!-- depth component of polar coordinate !-->
-	<xsl:variable name="depth" select="2.0 div $_tmp2"/>
+	<xsl:variable name="_depth">
+		<xsl:call-template name="calculate-depth">
+			<xsl:with-param name="width" select="$limit1 - $limit0"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="depth">
+		<xsl:choose>
+			<xsl:when test="$_depth &lt; $min_depth">
+				<xsl:value-of select="$min_depth"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$_depth"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:variable name="x">
 		<xsl:call-template name="cos">
@@ -68,12 +92,8 @@
 		<xsl:apply-templates select=".">
 			<xsl:with-param name="limit0" select="$limit0 + (position() - 1) * $step"/>
 			<xsl:with-param name="limit1" select="$limit0 + position() * $step"/>
+			<xsl:with-param name="min_depth" select="$depth + 2"/>
 		</xsl:apply-templates>
-
-<!--
-		<span class="limit0"><xsl:value-of select="$limit0 + (position() -1) * $step"/></span>
-		<span class="limit1"><xsl:value-of select="$limit0 + position() * $step"/></span>
-!-->
 	</xsl:for-each>
 </xsl:template>
 

@@ -22,7 +22,9 @@
 			<building type="sub-2-3"/>
 		</building>
 		<building type="sub-3">
-			<building type="sub-3-1"/>
+			<building type="sub-3-1">
+				<building type="sub-3-1-1"/>
+			</building>
 			<building type="sub-3-2"/>
 		</building>
 	</building>
