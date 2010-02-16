@@ -1,28 +1,12 @@
-div.boardsection {
-	float: left;
+body {
 	background: green;
 }
 
 div.building {
-	float: left;
-	background: white;
-	margin: 4px;
-	padding: 2px;
-	min-width: 200px;
-	min-height: 60px;
+	background-image: url('sscircle.png');
+	-webkit-background-size: 64px 64px;
+	width: 48px;
+	height: 48px;
+	padding: 8px;
 }
 
-div.units {
-	background: white;
-}
-
-span.allied {
-	color: green;
-}
-
-div.Core {
-}
-
-div.MediumManaRuby {
-	background: red;
-}
