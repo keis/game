@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="mana.xsl"?>
 <board>
-	<boardSection player="player1">
-		<building type="Core">
-			<building type="MediumManaRuby">
-				<creature type="Skeleton" alignment="allied"/>
-				<building type="TestBuilding"/>
-				<building type="TestBuilding"/>
+	<building type="Core">
+		<building type="sub-1">
+			<building type="sub-1-1">
+				<building type="sub-1-1-1"/>
+				<building type="sub-1-1-2"/>
 			</building>
-			<building type="MediumManaRuby"/>
-			<building type="MediumManaRuby"/>
+			<building type="sub-1-2">
+				<building type="sub-1-2-1"/>
+				<building type="sub-1-2-2"/>
+				<building type="sub-1-2-3"/>
+			</building>
 		</building>
-	</boardSection>
+		<building type="sub-2">
+			<building type="sub-2-1">
+				<building type="sub-2-1-1"/>
+				<building type="sub-2-1-2"/>
+			</building>
+			<building type="sub-2-2"/>
+			<building type="sub-2-3"/>
+		</building>
+		<building type="sub-3">
+			<building type="sub-3-1"/>
+			<building type="sub-3-2"/>
+		</building>
+	</building>
 </board>
