@@ -3,6 +3,7 @@ from buildings import ManaRuby
 from spell import Spell
 from hook import Hookable
 from act import move_creatures
+from error import NotEnoughMana
 
 FOCUS_SIZE = 5
 
@@ -19,6 +20,8 @@ class Mage(Hookable):
 		# replace with set of all owned stuff?
 		self.creatures = []
 		self.buildings = []
+
+		self.mana = 0
 
 	def add_creature(self, creature):
 		self.creatures.append(creature)
@@ -48,6 +51,12 @@ class Mage(Hookable):
 		self.focused[:] = focused
 		self.run_hook('post-focus', pool, focused)
 
+		self.convert_mana()
+
+	def convert_mana(self):
+		mana = self.focused_mana()
+		self.mana = reduce(lambda a,b: a + b.capacity, mana, 0)
+
 	def focused_spells(self):
 		return [x for x in self.focused if isinstance(x,Spell)]
 	
@@ -56,7 +65,11 @@ class Mage(Hookable):
 
 	def cast_spell(self, spell, targets):
 		cost = spell.cost(targets)
-		spell.cast(self, targets)
+		if cost <= self.mana:
+			self.mana -= cost
+			spell.cast(self, targets)
+		else:
+			raise NotEnoughMana("%s < %s" % (self.mana, cost))
 
 	def order_movement(self, units, target):
 		move_creatures(units, target)

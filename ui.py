@@ -18,6 +18,7 @@ class UI(object):
 			'spells' : lambda: spells,
 			'library' : lambda: self.player.library,
 			'focused' : lambda: self.player.focused,
+			'op_focused' : lambda: self.opponent.focused,
 			'free_pads' : self.player.core.network_free_pads,
 			'building_types' : lambda: buildings,
 			'creature_types' : lambda: creatures,
@@ -96,7 +97,12 @@ class UI(object):
 				return
 
 		targets = self.select_targets(spell)
-		self.player.cast_spell(spell, targets)
+
+		try: self.player.cast_spell(spell, targets)
+		except GameError, e:
+			print "Oh No! you made the game sad"
+			print "\t%s - %s" % (type(e), e)
+			return
 
 	def show(self, what='focused', index=None):
 		aliases = {
@@ -173,13 +179,9 @@ class UI(object):
 		spells = self.player.focused_spells()
 		return ', '.join(['%d) %s (%s)' % (i, x._name, x._cost) for i,x in enumerate(spells)])
 
-	def total_mana(self):
-		mana = self.player.focused_mana()
-		return reduce(lambda a,b: a + b.capacity, mana, 0)
-
 	def input(self):
 		cmds = {'cast':self.cast, 'show':self.show, 'move':self.move, 'done':self.done}
-		print 'mana:', self.total_mana()
+		print 'mana:', self.player.mana
 		print self.short_spell_list()
 		data = raw_input(">").split(' ')
 		try:
