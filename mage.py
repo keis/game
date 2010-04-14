@@ -12,8 +12,9 @@ class Mage(Hookable):
 	class Focused(zUnordered, zPrivate): pass
 	class Pool(zRandom, zPrivate): pass
 
-	def __init__(self, **kwargs):
+	def __init__(self, name='Rincewind', **kwargs):
 		super(Mage, self).__init__(**kwargs)
+		self.name = name
 		self.library = Mage.Library(owner=self)
 		self.focused = Mage.Focused(owner=self)
 
@@ -22,6 +23,9 @@ class Mage(Hookable):
 		self.buildings = []
 
 		self.mana = 0
+
+	def __children(self):
+		return [self.library, self.focused, self.core, self.buildings, self.creatures]
 
 	def add_creature(self, creature):
 		self.creatures.append(creature)
@@ -87,3 +91,9 @@ class Mage(Hookable):
 			x.discard()
 
 		return True
+
+	def __getitem__(self, index):
+		return self.__children()[index]
+
+	def __len__(self):
+		return len(self.__children())
