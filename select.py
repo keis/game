@@ -12,8 +12,8 @@ def flatten(tree):
 		except TypeError:
 			pass
 
-robj = re.compile(r'([a-zA-Z]*)(\[([a-zA-Z]+=.+)\])?')
-def _select(q, context):
+robj = re.compile(r'^([a-zA-Z]*)(#([a-zA-Z]+))?(\[([a-zA-Z])+(=)(.+)\])?$')
+def _select(q, context, IDs=None):
 	def children(x):
 		try: iter(x)
 		except TypeError:
@@ -33,30 +33,64 @@ def _select(q, context):
 
 		return False
 
-	def matchattr(x, (key, value)):
+	def matchattr(x, key, value):
 		return str(getattr(x, key, None)) == value
-		
-	out = flatten(context)
+
+	def matchid(x, id):
+		return IDs.get(id) is x
+	
+	if IDs is None:
+		IDs = {}
+	
+	if 'root' not in IDs:
+		IDs['root'] = context
+
+	out = None
 	descNext = False
+
 	for x in q:
 		desc = descNext
 		descNext = False
+
 		if x in ('*',''):
+			if out is None:
+				out = flatten(context)
+				continue
+
 			if desc:
 				out = dodesc(out)
+
 		elif x == '>':
-			print len(out)
+			if out is None:
+				out = filter(lambda o: o is not context, flatten(context))
+				continue
+
 			out = reduce(lambda a,o: a + children(o), out, [])
+
 		else:
+			descNext = True
+
+			t,_id,id,_attr,key,op,value = robj.match(x).groups()
+			if out is None:
+				if id in IDs:
+					out = [IDs[id]]
+					# FIXME, make sure the other requirements matches
+					continue
+
+				out = flatten(context)
+					
 			if desc:
 				out = dodesc(out)
-			t,attr = robj.match(x).group(1,3)
-			out = filter(lambda o: (not t or matchtype(type(o), t)) and (not attr or matchattr(o, attr.split('='))), out)
-			descNext = True
+
+			out = filter(lambda o: (not t or matchtype(type(o), t)) and \
+				(not _id or matchid(o, id)) and \
+				(not _attr or matchattr(o, key, value))
+				, out)
+
 	return list(out)
 
-def select(q, context):
-	return _select(q.split(' '), context)
+def select(q, context, **kwargs):
+	return _select(q.split(' '), context, **kwargs)
 
 if __name__ == '__main__':
 	def dump(d):

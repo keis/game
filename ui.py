@@ -131,7 +131,12 @@ class UI(object):
 
 	def select(self, *args):
 		from select import _select
-		objs = _select(args, [self.player, self.opponent])
+		ids = {
+			'self' : self.player,
+			'oppenent' : self.opponent,
+		}
+
+		objs = _select(args, [self.player, self.opponent], IDs = ids)
 		print self.view(objs)
 
 	def move(self, *args):
