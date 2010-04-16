@@ -17,11 +17,41 @@
 			<link type="text/css" rel="stylesheet" href="mana.css" />
 		</head>
 		<body>
-			<div style="position: absolute; top: 100px; left: 200px;">
-				<xsl:apply-templates />
-			</div>
+			<xsl:apply-templates />
 		</body>
 	</html>
+</xsl:template>
+
+<xsl:template match="section">
+	<div>
+		<xsl:attribute name="style">
+		position: absolute;
+		<xsl:choose>
+			<xsl:when test="@orientation = 'north'">
+				top: 100px; left: 400px;
+			</xsl:when>
+			<xsl:when test="@orientation = 'south'">
+				top: 800px; left: 400px;
+			</xsl:when>
+		</xsl:choose>
+		</xsl:attribute>
+		<xsl:for-each select="building">
+			<xsl:choose>
+				<xsl:when test="@orientation = 'north'">
+					<xsl:call-template name="building">
+						<xsl:with-param name="limit0" select="0"/>
+						<xsl:with-param name="limit1" select="$pi"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@orientation = 'south'">
+					<xsl:call-template name="building">
+						<xsl:with-param name="limit0" select="$pi"/>
+						<xsl:with-param name="limit1" select="2 * $pi"/>
+					</xsl:call-template>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:for-each>
+	</div>
 </xsl:template>
 
 <xsl:template name="calculate-depth">
@@ -68,6 +98,7 @@
 		</xsl:choose>
 	</xsl:variable>
 
+	<!-- Calculate normal x,y-coords from poolar coordinates !-->
 	<xsl:variable name="x">
 		<xsl:call-template name="cos">
 			<xsl:with-param name="pX" select="$limit0 + (($limit1 - $limit0) div 2)"/>

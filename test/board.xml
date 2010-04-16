@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="mana.xsl"?>
 <board>
-	<building type="Core">
-		<building type="sub-1">
-			<building type="sub-1-1">
-				<building type="sub-1-1-1"/>
-				<building type="sub-1-1-2"/>
+	<section orientation="north">
+		<building type="Core">
+			<building type="sub-1">
+				<building type="sub-1-1">
+					<building type="sub-1-1-1"/>
+					<building type="sub-1-1-2"/>
+				</building>
+				<building type="sub-1-2">
+					<building type="sub-1-2-1"/>
+					<building type="sub-1-2-2"/>
+					<building type="sub-1-2-3"/>
+				</building>
 			</building>
-			<building type="sub-1-2">
-				<building type="sub-1-2-1"/>
-				<building type="sub-1-2-2"/>
-				<building type="sub-1-2-3"/>
+			<building type="sub-2">
+				<building type="sub-2-1">
+					<building type="sub-2-1-1"/>
+					<building type="sub-2-1-2"/>
+				</building>
+				<building type="sub-2-2"/>
+				<building type="sub-2-3"/>
+			</building>
+			<building type="sub-3">
+				<building type="sub-3-1">
+					<building type="sub-3-1-1"/>
+				</building>
+				<building type="sub-3-2"/>
 			</building>
 		</building>
-		<building type="sub-2">
-			<building type="sub-2-1">
-				<building type="sub-2-1-1"/>
-				<building type="sub-2-1-2"/>
-			</building>
-			<building type="sub-2-2"/>
-			<building type="sub-2-3"/>
-		</building>
-		<building type="sub-3">
-			<building type="sub-3-1">
-				<building type="sub-3-1-1"/>
-			</building>
-			<building type="sub-3-2"/>
-		</building>
-	</building>
+	</section>
 </board>

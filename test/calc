@@ -2,6 +2,8 @@ treating my 64x64 boxes as unit circles
 
 in reality the whole section should be larger then pi
 
+2 / sqrt(2 - 2 cos(WIDTH))
+
 core sections:
 	3 children
 	section 1: 0..(pi/3),		mid = pi/6
@@ -11,6 +13,7 @@ core sections:
 sub 1:
 	2 children
 	section: 0..(pi/3)
+	depth = 2 / sqrt(2 - 2 cos(pi/3)) = 2.0
 	polar-coord: (2 * cos(pi/6), 2 * sin(pi/6))
 		55, 32
 	sub1-sections:
