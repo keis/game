@@ -42,13 +42,15 @@ class Timer(SpellToken):
 		if self.counter == self.target:
 			self.destroy()
 
-def spell(desc=None, cost = 1, tags = ()):
+def spell(desc=None, cost = 1, sacrifice = None, tags = ()):
 	def spell_i(func):
 		class _Spell(Spell):
-			_desc = desc
-			_cost = cost
-			_name = func.func_name
-			_htext = func.func_doc
+			_desc = desc			# dictionary containing description of needed parameters
+			_cost = cost			# cost to cast the spell
+			_sacrifice = sacrifice	# needed sacrifice when prepering spell
+			_name = func.func_name	# name of spell (function name)
+			_htext = func.func_doc	# short text describing the spell (function help)
+
 			def __init__(self, **kwargs):
 				super(_Spell, self).__init__(tags=tags, **kwargs)
 				self.func = func

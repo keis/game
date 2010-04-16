@@ -4,6 +4,7 @@ from spell import Spell
 from hook import Hookable
 from act import move_creatures
 from error import NotEnoughMana
+from xselect import select
 
 FOCUS_SIZE = 5
 
@@ -78,11 +79,11 @@ class Mage(Hookable):
 	def order_movement(self, units, target):
 		move_creatures(units, target)
 
-	def discard(self, count, tag=None):
+	def discard(self, count, desc=None):
 		# TODO: Make it possible to choose which focusables to discard
 		focused = self.focused
-		if tag:
-			focused = [x for x in focused if tag in x.tags]
+		if desc:
+			focused = select(desc, focused)
 
 		if len(focused) < count:
 			return False
@@ -95,7 +96,7 @@ class Mage(Hookable):
 	def sacrifice(self, count, desc=None):
 		pool = self.build_pool()
 		if desc is not None:
-			pool = [x for x in pool if match(x, desc)]
+			pool = select(desc, pool)
 
 		if len(pool) < count:
 			return False
@@ -110,13 +111,3 @@ class Mage(Hookable):
 
 	def __len__(self):
 		return len(self.__children())
-
-def match(x, desc):
-	for kt,k in desc:
-		if kt == 'type':
-			if not isinstance(x, k):
-				return False
-		elif kt == 'tag':
-			if k not in  x.tags:
-				return False
-	return True

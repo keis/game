@@ -12,7 +12,7 @@ def flatten(tree):
 		except TypeError:
 			pass
 
-robj = re.compile(r'^([a-zA-Z]*)(#([a-zA-Z]+))?(\[([a-zA-Z])+(=)(.+)\])?$')
+robj = re.compile(r'^([a-zA-Z]*)(#([a-zA-Z]+))?(\[([a-zA-Z_]+)(=)(.+)\])?$')
 def _select(q, context, IDs=None):
 	def children(x):
 		try: iter(x)
@@ -34,7 +34,13 @@ def _select(q, context, IDs=None):
 		return False
 
 	def matchattr(x, key, value):
-		return str(getattr(x, key, None)) == value
+		v = getattr(x, key, None)
+		
+		# hack, should add other operators like in/not in/not eq/et cetera
+		if isinstance(v, (list, tuple)):
+			return value in [str(i) for i in v]
+
+		return str(v) == value
 
 	def matchid(x, id):
 		return IDs.get(id) is x
@@ -69,7 +75,6 @@ def _select(q, context, IDs=None):
 
 		else:
 			descNext = True
-
 			t,_id,id,_attr,key,op,value = robj.match(x).groups()
 			if out is None:
 				if id in IDs:

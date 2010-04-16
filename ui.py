@@ -130,7 +130,7 @@ class UI(object):
 			print self.view(obj, long=True)
 
 	def select(self, *args):
-		from select import _select
+		from xselect import _select
 		ids = {
 			'self' : self.player,
 			'oppenent' : self.opponent,

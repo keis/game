@@ -1,10 +1,13 @@
 from spell import spell,Timer
+from error import GameError
 import effects
 
 @spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
 def prepare_spell(caster, spell=None):
 	"""Makes a new spell ready to be used"""
-	caster.library.add(spell(owner=caster))
+	sacrifice = spell._sacrifice
+	if caster.sacrifice(sacrifice):
+		caster.library.add(spell(owner=caster))
 
 @spell(desc={'spell': ("the spell to focus", "library")}, cost = 2)
 def focus_spell(caster, spell=None):
@@ -21,11 +24,13 @@ def repair(caster, building=None):
 	}, cost = 5, tags=('create',))
 def construct(caster, building_type=None, pad=None):
 	cost = building_type.cost - 1
-	if caster.discard(cost, tag='create'):
+	if caster.discard(cost, desc='[tags=create]'):
 		building = building_type(owner=caster)
 		parent,pos = pad
 		parent.connect(building, pos)
 		caster.add_building(building)
+	else:
+		raise GameError() # fixme, more specific
 
 @spell(desc={
 		'creature_type': ("the kind of creature to summon", "creature_types"),
@@ -33,10 +38,12 @@ def construct(caster, building_type=None, pad=None):
 	}, cost = 5, tags=('create',))
 def summon(caster, creature_type=None, building=None):
 	cost = creature_type.cost - 1
-	if caster.discard(cost, tag='create'):
+	if caster.discard(cost, tag='[tags=create]'):
 		creature = creature_type(owner=caster, position=building)
 		building.add_creature(creature)
 		caster.add_creature(creature)
+	else:
+		raise GameError() # fixme, more specific
 
 @spell(desc={
 		'building': ("The building to initiate the fire storm at", "op_buildings")
