@@ -22,6 +22,12 @@ Boulder:
 	* is not affected by REPAIR
 	* reduces all AOE and LINE EFFECTS passing by 40% (after normal scaling)
 
+Workshop (name?):
+	LEAFS: ?
+	HP: ?
+	DEF: ?
+	* Channeler, channels 1 Construct
+
 Magic Amplifier:
 	LEAFS: 2
 	HP: 500

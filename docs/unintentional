@@ -1,0 +1,10 @@
+noted effects that is not inentional
+TODO: decide
+
+* when a building is destroyed from AOE, the effect is not applied to the children
+	with e.g the fire storm units in child nodes take no damage
+
+	note, the exact workings of building destruction is not decided yet
+
+* when a subtree with depth > 2 is destroyed. creature-add will be sent
+	for each level * unit
