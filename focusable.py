@@ -21,3 +21,6 @@ class Focusable(Owned, Hookable):
 		self.run_hook('pre-discard')
 		self.unfocus()
 		self.run_hook('post-discard')
+
+	def sacrifice(self):
+		print "STUB: sacrifice"

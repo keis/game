@@ -87,3 +87,26 @@ class Mage(Hookable):
 			x.discard()
 
 		return True
+
+	def sacrifice(self, count, desc=None):
+		pool = self.build_pool()
+		if desc is not None:
+			pool = [x for x in pool if match(x, desc)]
+
+		if len(pool) < count:
+			return False
+
+		for x in focused[:count]:
+			x.sacrifice()
+
+		return True
+
+def match(x, desc):
+	for kt,k in desc:
+		if kt == 'type':
+			if not isinstance(x, k):
+				return False
+		elif kt == 'tag':
+			if k not x.tags:
+				return False
+	return True
