@@ -64,7 +64,9 @@ class HookDB(defaultdict):
 		defaultdict.__init__(self, HookDB.hook_dict)
 
 	def hook(self, target, key, func, owner=None):
-		owner = owner or target
+		if owner is None:
+			owner = target
+
 		if owner is not None:
 			try:
 				owner.__hooks

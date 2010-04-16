@@ -21,11 +21,13 @@ starting_spells = (prepare_spell, prepare_spell, prepare_spell,
 
 hook_db = HookDB()
 
+next_player_id = 0
 def create_player():
-	m = Mage(hook_db = hook_db)
-	rubies = [MediumManaRuby(owner=m) for x in range(4)]
-	m.core = Core(owner=m)
-	spells = [x(owner=m) for x in starting_spells]
+	global next_player_id
+	m = Mage(name='player%s' % next_player_id, hook_db = hook_db)
+	rubies = [MediumManaRuby(owner=m, hook_db=hook_db) for x in range(4)]
+	m.core = Core(owner=m, hook_db=hook_db)
+	spells = [x(owner=m, hook_db=hook_db) for x in starting_spells]
 	m.library.add(spells)
 
 	map(m.core.connect, rubies)
@@ -42,6 +44,7 @@ def create_player():
 
 	m.focus()
 
+	next_player_id += 1
 	return m
 
 players = []

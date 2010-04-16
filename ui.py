@@ -129,6 +129,16 @@ class UI(object):
 
 			print self.view(obj, long=True)
 
+	def select(self, *args):
+		from select import _select
+		ids = {
+			'self' : self.player,
+			'oppenent' : self.opponent,
+		}
+
+		objs = _select(args, [self.player, self.opponent], IDs = ids)
+		print self.view(objs)
+
 	def move(self, *args):
 		try: pivot = args.index('to')
 		except ValueError:
@@ -180,7 +190,7 @@ class UI(object):
 		return ', '.join(['%d) %s (%s)' % (i, x._name, x._cost) for i,x in enumerate(spells)])
 
 	def input(self):
-		cmds = {'cast':self.cast, 'show':self.show, 'move':self.move, 'done':self.done}
+		cmds = {'cast':self.cast, 'show':self.show, 'move':self.move, 'select':self.select, 'done':self.done}
 		print 'mana:', self.player.mana
 		print self.short_spell_list()
 		data = raw_input(">").split(' ')

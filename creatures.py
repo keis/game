@@ -27,7 +27,7 @@ class Summoner(Creature, Channeler):
 	hp = 40
 
 	def __init__(self, **kwargs):
-		from spell import summon
+		from spells import summon
 		super(Summoner, self).__init__(**kwargs)
 		self.add(summon(owner=self.owner))
 
