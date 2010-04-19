@@ -7,28 +7,26 @@ class provider(dict):
 		return dict.__getitem__(self, key)()
 
 class UI(object):
+	aliases = {
+		'players' : '#root > Mage',
+		'all_spells' : 'Enabled > SpellMeta',
+		'all_buildings' : 'Enabled > BuildingMeta',
+		'all_creatures' : 'Enabled > CreatureMeta',
+		'base' : '#self Buildings',
+		'buildings' : '#self Building',
+		'focused' : '#self Focused *',
+		'library' : '#self Library *',
+		'op_base' : '#opponent Building',
+		'op_buildings' : '#opponent Building',
+		'creatures' : '#self Creature',
+		'op_creatures' : '#opponent Creature',
+	}
+
 	def __init__(self, player, opponent):
 		self.player = player
 		self.opponent = opponent
 		self.active = False
 
-		self.context = provider()
-		self.context.update({
-			'players' : lambda: players,
-			'spells' : lambda: spells,
-			'library' : lambda: self.player.library,
-			'focused' : lambda: self.player.focused,
-			'op_focused' : lambda: self.opponent.focused,
-			'free_pads' : self.player.core.network_free_pads,
-			'building_types' : lambda: buildings,
-			'creature_types' : lambda: creatures,
-			'buildings' : lambda: list(self.player.core.network()),
-			'op_buildings' : lambda: list(self.opponent.core.network()),
-			'all_buildings' : lambda: self.context['buildings'] + self.context['op_buildings'],
-			'creatures' : lambda: player.creatures,
-			'op_creatures' : lambda: self.opponent.creatures,
-			'_pool' : self.player.build_pool
-		})
 		hook_db.hook(None, 'post-repair', self.repair_p)
 		hook_db.hook(None, 'post-heal', self.heal_p)
 		hook_db.hook(None, 'post-discard', self.discard_p)
@@ -113,12 +111,16 @@ class UI(object):
 			return
 
 	def show(self, what='focused', index=None):
-		aliases = {
-			'base': 'buildings'
-		}
-		what = aliases.get(what, what) # in da butt
+		from xselect import select
+		what = self.aliases.get(what, what) # in da butt
 
-		try: things = self.context[what]
+		tmp = {
+			'self' : self.player,
+			'opponent' : self.opponent,
+		}
+		tmp.update(ids)
+
+		try: things = select(what, context, IDs = tmp)
 		except KeyError:
 			print "Show me yours first"
 			return
@@ -149,6 +151,7 @@ class UI(object):
 		print self.view(objs)
 
 	def move(self, *args):
+		from xselect import select
 		try: pivot = args.index('to')
 		except ValueError:
 			print "you are missing a 'to' there"
@@ -156,12 +159,18 @@ class UI(object):
 
 		target = args[pivot+1].split('-')
 
+		tmp = {
+			'self' : self.player,
+			'opponent' : self.opponent,
+		}
+		tmp.update(ids)
+
 		try:
 			if len(target) == 2:
-				all_buildings = self.context['%s_buildings' % target[0]]
+				all_buildings = select(self.aliases['%s_buildings' % target[0]], context, IDs = tmp)
 				target = int(target[1])
 			else:
-				all_buildings = self.context['buildings']
+				all_buildings = select(self.aliases['buildings'], context, IDs = tmp)
 				target = int(target[0])
 			target = all_buildings[target]
 		except ValueError:
@@ -169,9 +178,10 @@ class UI(object):
 			return
 		except IndexError:
 			print "There is no such building"
+			print self.view(all_buildings)
 			return
 			
-		all_units = self.context['creatures']
+		all_units = select(self.aliases['creatures'], context, IDs = tmp)
 
 		try: units = map(lambda x: all_units[int(x)], args[:pivot])
 		except ValueError:
