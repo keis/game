@@ -42,7 +42,7 @@ class Timer(SpellToken):
 		if self.counter == self.target:
 			self.destroy()
 
-def spell(desc=None, cost = 1, sacrifice = None, tags = ()):
+def spell(desc=None, cost = 1, sacrifice = 0, tags = ()):
 	def spell_i(func):
 		class _Spell(Spell):
 			_desc = desc			# dictionary containing description of needed parameters
