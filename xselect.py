@@ -77,7 +77,7 @@ def _select(q, context, IDs=None):
 			descNext = True
 			t,_id,id,_attr,key,op,value = robj.match(x).groups()
 			if out is None:
-				if id in IDs:
+				if id is not None:
 					out = [IDs[id]]
 					# FIXME, make sure the other requirements matches
 					continue
