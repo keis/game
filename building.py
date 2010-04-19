@@ -2,6 +2,14 @@ from hook import Hookable
 from creature import CreatureStack
 from owned import friendly
 
+class Pad(object):
+	def __init__(self, node, index):
+		self.node = node
+		self.index = index
+
+	def __str__(self):
+		return 'at %s index %s' % (self.node, self.index)
+
 class Tree(object):
 	npads = 1
 	def __init__(self, **kwargs):
@@ -13,12 +21,15 @@ class Tree(object):
 		# index have only a estetical effect, but I like to feel pretty
 		pads = self.free_pads()
 		if other.parent is None and pads:
-			src,sindex = pads[index]
-			src.pads[sindex] = other
+			pad = pads[index]
+			pad.node.pads[pad.index] = other
 			other.parent = self
 
 	def free_pads(self):
-		return [(self,i) for i,x in enumerate(self.pads) if x is None]
+		return [Pad(self,i) for i,x in enumerate(self.pads) if x is None]
+
+	def __children(self):
+		return filter(None, [Pad(self,i) if x is None else None for i,x in enumerate(self.pads)])
 
 	def network(self):
 		yield self
@@ -53,6 +64,12 @@ class Tree(object):
 		else: cleanup()
 
 		self.parent.pads = [x if x != self else None for x in self.parent.pads]
+
+	def __getitem__(self, index):
+		return self.__children()[index]
+
+	def __len__(self):
+		return len(self.__children())
 
 # This class makes sure pretty printing of building-classes is done
 class BuildingMeta(type):

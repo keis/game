@@ -10,6 +10,7 @@ random.seed()
 spells = (prepare_spell, focus_spell, repair, summon, construct, fire_storm)
 creatures = (LizardDemon, Skeleton, Summoner, ManaEater)
 buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder)
+enabled = (spells, creatures, buildings)
 
 current_test = fire_storm
 starting_spells = (prepare_spell, prepare_spell, prepare_spell,
@@ -31,6 +32,7 @@ def create_player():
 	m.library.add(spells)
 
 	map(m.core.connect, rubies)
+	context.append(m)
 	players.append(m)
 
 	test = Boulder(owner=m)
@@ -47,4 +49,6 @@ def create_player():
 	next_player_id += 1
 	return m
 
+context = [enabled]
+ids = {'enabled': enabled}
 players = []

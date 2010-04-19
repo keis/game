@@ -1,4 +1,4 @@
-from seed import players,spells,buildings,creatures,hook_db
+from seed import players,spells,buildings,creatures,hook_db,context,ids
 from textview import db as view_db
 from error import GameError
 
@@ -59,13 +59,21 @@ class UI(object):
 		return view_db[obj](self.player, obj, **kwargs)
 
 	def select_targets(self, spell):
+		from xselect import select
+		tmp = {
+			'self' : self.player,
+			'opponent' : self.opponent,
+		}
+		tmp.update(ids)
+
 		desc = spell._desc
 		targets = {}
 		for k,(v,s) in desc.items():
 			print '%s (%s):' % (k,v)
 			if s is None:
 				p = stuff
-			p = eval(s, self.context)
+			print 'select', s
+			p = select(s, context, IDs = tmp)
 			print self.view(p, enumerate=True, newline_sep=True)
 
 			while True:
@@ -131,12 +139,13 @@ class UI(object):
 
 	def select(self, *args):
 		from xselect import _select
-		ids = {
+		tmp = {
 			'self' : self.player,
-			'oppenent' : self.opponent,
+			'opponent' : self.opponent,
 		}
+		tmp.update(ids)
 
-		objs = _select(args, [self.player, self.opponent], IDs = ids)
+		objs = _select(args, context, IDs = tmp)
 		print self.view(objs)
 
 	def move(self, *args):

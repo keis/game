@@ -2,25 +2,25 @@ from spell import spell,Timer
 from error import GameError
 import effects
 
-@spell(desc={'spell': ("the spell to prepare", "spells")}, cost = 1)
+@spell(desc={'spell': ("the spell to prepare", "#enabled SpellMeta")}, cost = 1)
 def prepare_spell(caster, spell=None):
 	"""Makes a new spell ready to be used"""
 	sacrifice = spell._sacrifice
 	if caster.sacrifice(sacrifice):
 		caster.library.add(spell(owner=caster))
 
-@spell(desc={'spell': ("the spell to focus", "library")}, cost = 2)
+@spell(desc={'spell': ("the spell to focus", "#self > Library *")}, cost = 2)
 def focus_spell(caster, spell=None):
 	""" Brings a spell into focus"""
 	spell.focus()
 
-@spell(desc={'building': ("the building to initiate the repair at", "buildings")}, cost=10)
+@spell(desc={'building': ("the building to initiate the repair at", "#self Building")}, cost=10)
 def repair(caster, building=None):
 	effects.repair(caster, building)
 
 @spell(desc={
-		'building_type': ("the kind of building to construct", "building_types"),
-		'pad': ("the pad to place the building on", "free_pads")
+		'building_type': ("the kind of building to construct", "#enabled BuildingMeta"),
+		'pad': ("the pad to place the building on", "#self Building Pad")
 	}, cost = 5, tags=('create',))
 def construct(caster, building_type=None, pad=None):
 	cost = building_type.cost - 1
@@ -33,8 +33,8 @@ def construct(caster, building_type=None, pad=None):
 		raise GameError() # fixme, more specific
 
 @spell(desc={
-		'creature_type': ("the kind of creature to summon", "creature_types"),
-		'building': ("the building to summon the creature at", "buildings")
+		'creature_type': ("the kind of creature to summon", "#enabled CreatureMeta"),
+		'building': ("the building to summon the creature at", "#self Building")
 	}, cost = 5, tags=('create',))
 def summon(caster, creature_type=None, building=None):
 	cost = creature_type.cost - 1
@@ -46,7 +46,7 @@ def summon(caster, creature_type=None, building=None):
 		raise GameError() # fixme, more specific
 
 @spell(desc={
-		'building': ("The building to initiate the fire storm at", "op_buildings")
+		'building': ("The building to initiate the fire storm at", "#opponent Building")
 	}, cost=10)
 def fire_storm(caster, building=None):
 	t = Timer(owner=caster, target=3)
