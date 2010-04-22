@@ -20,7 +20,7 @@ def repair(caster, building=None):
 
 @spell(desc={
 		'building_type': ("the kind of building to construct", "#enabled BuildingMeta"),
-		'pad': ("the pad to place the building on", "#self Building Pad")
+		'pad': ("the pad to place the building on", "#self Building > Pad")
 	}, cost = 5, tags=('create',))
 def construct(caster, building_type=None, pad=None):
 	cost = building_type.cost - 1
@@ -38,7 +38,7 @@ def construct(caster, building_type=None, pad=None):
 	}, cost = 5, tags=('create',))
 def summon(caster, creature_type=None, building=None):
 	cost = creature_type.cost - 1
-	if caster.discard(cost, tag='[tags=create]'):
+	if caster.discard(cost, desc='[tags=create]'):
 		creature = creature_type(owner=caster, position=building)
 		building.add_creature(creature)
 		caster.add_creature(creature)

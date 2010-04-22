@@ -12,16 +12,18 @@ class Mage(Hookable):
 	class Library(zUnordered, zPublic): pass
 	class Focused(zUnordered, zPrivate): pass
 	class Pool(zRandom, zPrivate): pass
+	class Summary(list): pass
 
 	def __init__(self, name='Rincewind', **kwargs):
 		super(Mage, self).__init__(**kwargs)
 		self.name = name
 		self.library = Mage.Library(owner=self)
 		self.focused = Mage.Focused(owner=self)
+		self.pool = Mage.Pool(owner=self)
 
 		# replace with set of all owned stuff?
-		self.creatures = []
-		self.buildings = []
+		self.creatures = Mage.Summary()
+		self.buildings = Mage.Summary()
 
 		self.mana = 0
 
@@ -47,10 +49,10 @@ class Mage(Hookable):
 		assert isinstance(pool, Mage.Pool)
 		self.run_hook('post-build-pool', pool)
 
-		return pool
+		self.pool = pool
 
 	def focus(self):
-		pool = self.build_pool()
+		pool = self.pool
 		focused = pool.get(FOCUS_SIZE)
 		(pool, focused) = self.run_hook('pre-focus', pool, focused)
 		self.focused[:] = focused

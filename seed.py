@@ -1,23 +1,24 @@
 from mage import Mage
 from spells import prepare_spell, focus_spell, fire_storm, repair, summon, construct, fire_storm
 from buildings import SmallManaRuby,MediumManaRuby,LargeManaRuby,Core,Boulder
-from creatures import LizardDemon, Skeleton, Summoner, ManaEater
+from creatures import LizardDemon, Skeleton, Ghost, Summoner, ManaEater
 from hook import HookDB
 
 import random
 random.seed()
 
 spells = (prepare_spell, focus_spell, repair, summon, construct, fire_storm)
-creatures = (LizardDemon, Skeleton, Summoner, ManaEater)
+creatures = (LizardDemon, Skeleton, Ghost, Summoner, ManaEater)
 buildings = (SmallManaRuby, MediumManaRuby, LargeManaRuby, Boulder)
 enabled = (spells, creatures, buildings)
 
-current_test = fire_storm
+test_spell = summon
+test_creature = Ghost
+test_building = Boulder
+
 starting_spells = (prepare_spell, prepare_spell, prepare_spell,
-	#summon, summon, summon,
-	#construct, construct,
 	focus_spell, focus_spell,
-	current_test, current_test, current_test,
+	test_spell, test_spell, test_spell,
 )
 
 hook_db = HookDB()
@@ -35,11 +36,11 @@ def create_player():
 	context.append(m)
 	players.append(m)
 
-	test = Boulder(owner=m)
+	test = test_building(owner=m)
 	rubies[0].connect(test)
 	m.add_building(test)
 
-	l = ManaEater(owner=m, hook_db=hook_db, position=m.core)
+	l = test_creature(owner=m, hook_db=hook_db, position=m.core)
 	m.add_creature(l)
 	m.core.add_creature(l)
 	map(m.add_building, [m.core] + rubies)

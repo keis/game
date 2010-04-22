@@ -17,4 +17,3 @@ class Owned(Hookable):
 
 def friendly(a,b):
 	return getattr(a, 'owner', None) == getattr(b, 'owner', None)
-

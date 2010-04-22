@@ -21,6 +21,16 @@ class Skeleton(Creature, Owned):
 	def __init__(self, **kwargs):
 		super(Skeleton, self).__init__(**kwargs)
 
+class Ghost(Creature, Owned):
+	attack = 30
+	defence = 10
+	hp = 40
+	cost = 1
+	can_stealth = True
+
+	def __init__(self, **kwargs):
+		super(Ghost, self).__init__(**kwargs)
+
 class Summoner(Creature, Channeler):
 	attack = 10
 	defence = 10

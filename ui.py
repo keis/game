@@ -2,24 +2,20 @@ from seed import players,spells,buildings,creatures,hook_db,context,ids
 from textview import db as view_db
 from error import GameError
 
-class provider(dict):
-	def __getitem__(self, key):
-		return dict.__getitem__(self, key)()
-
 class UI(object):
 	aliases = {
 		'players' : '#root > Mage',
 		'all_spells' : 'Enabled > SpellMeta',
 		'all_buildings' : 'Enabled > BuildingMeta',
 		'all_creatures' : 'Enabled > CreatureMeta',
-		'base' : '#self Buildings',
-		'buildings' : '#self Building',
+		'base' : '#self > Summary > Building',
+		'buildings' : '#self > Summary > Building',
 		'focused' : '#self Focused *',
 		'library' : '#self Library *',
-		'op_base' : '#opponent Building',
-		'op_buildings' : '#opponent Building',
-		'creatures' : '#self Creature',
-		'op_creatures' : '#opponent Creature',
+		'op_base' : '#opponent > Summary > Building',
+		'op_buildings' : '#opponent > Summary > Building',
+		'creatures' : '#self > Summary > Creature',
+		'op_creatures' : '#opponent > Summary > Creature',
 	}
 
 	def __init__(self, player, opponent):
@@ -32,6 +28,7 @@ class UI(object):
 		hook_db.hook(None, 'post-discard', self.discard_p)
 		hook_db.hook(None, 'post-add-damage', self.add_damage_p)
 		hook_db.hook(None, 'post-destroy', self.destroy_p)
+		hook_db.hook(None, 'post-stealth', self.stealth_p)
 
 	def repair_p(self, target, source, amount):
 		if self.active:
@@ -53,17 +50,40 @@ class UI(object):
 		if self.active:
 			print "%s was destroyed" % self.view(target)
 
+	def stealth_p(self, target):
+		if self.active:
+			print "%s fades into the shadows" % self.view(target)
+
 	def view(self, obj, **kwargs):
 		return view_db[obj](self.player, obj, **kwargs)
 
-	def select_targets(self, spell):
-		from xselect import select
+	def _select(self, q, c=None):
+		from xselect import _select
+		if c is None:
+			c = context
+
 		tmp = {
 			'self' : self.player,
-			'opponent' : self.opponent,
+			'opponent' : self.opponent
 		}
 		tmp.update(ids)
+		
+		return _select(q, c, IDs = tmp)
+	
+	def select(self, q , c=None):
+		from xselect import select
+		if c is None:
+			c = context
 
+		tmp = {
+			'self' : self.player,
+			'opponent' : self.opponent
+		}
+		tmp.update(ids)
+		
+		return select(q, c, IDs = tmp)
+
+	def select_targets(self, spell):
 		desc = spell._desc
 		targets = {}
 		for k,(v,s) in desc.items():
@@ -71,7 +91,7 @@ class UI(object):
 			if s is None:
 				p = stuff
 			print 'select', s
-			p = select(s, context, IDs = tmp)
+			p = self.select(s)
 			print self.view(p, enumerate=True, newline_sep=True)
 
 			while True:
@@ -85,7 +105,7 @@ class UI(object):
 			targets[k] = target
 		return targets
 
-	def cast(self, what):
+	def cmd_cast(self, what):
 		try:
 			x = int(what)
 			spell = self.player.focused_spells()[x]
@@ -110,17 +130,10 @@ class UI(object):
 			print "\t%s - %s" % (type(e), e)
 			return
 
-	def show(self, what='focused', index=None):
-		from xselect import select
+	def cmd_show(self, what='focused', index=None):
 		what = self.aliases.get(what, what) # in da butt
 
-		tmp = {
-			'self' : self.player,
-			'opponent' : self.opponent,
-		}
-		tmp.update(ids)
-
-		try: things = select(what, context, IDs = tmp)
+		try: things = self.select(what)
 		except KeyError:
 			print "Show me yours first"
 			return
@@ -131,27 +144,19 @@ class UI(object):
 			try:
 				obj = things[int(index)]
 			except ValueError:
-				print "That's not a valid building name"
+				print "That's not a valid name"
 				return
 			except IndexError:
-				print "There is no such building"
+				print "There is no such thing"
 				return
 
 			print self.view(obj, long=True)
 
-	def select(self, *args):
-		from xselect import _select
-		tmp = {
-			'self' : self.player,
-			'opponent' : self.opponent,
-		}
-		tmp.update(ids)
-
-		objs = _select(args, context, IDs = tmp)
+	def cmd_select(self, *args):
+		objs = self._select(args)
 		print self.view(objs)
 
-	def move(self, *args):
-		from xselect import select
+	def cmd_move(self, *args):
 		try: pivot = args.index('to')
 		except ValueError:
 			print "you are missing a 'to' there"
@@ -159,18 +164,12 @@ class UI(object):
 
 		target = args[pivot+1].split('-')
 
-		tmp = {
-			'self' : self.player,
-			'opponent' : self.opponent,
-		}
-		tmp.update(ids)
-
 		try:
 			if len(target) == 2:
-				all_buildings = select(self.aliases['%s_buildings' % target[0]], context, IDs = tmp)
+				all_buildings = self.select(self.aliases['%s_buildings' % target[0]])
 				target = int(target[1])
 			else:
-				all_buildings = select(self.aliases['buildings'], context, IDs = tmp)
+				all_buildings = self.select(self.aliases['buildings'])
 				target = int(target[0])
 			target = all_buildings[target]
 		except ValueError:
@@ -181,7 +180,7 @@ class UI(object):
 			print self.view(all_buildings)
 			return
 			
-		all_units = select(self.aliases['creatures'], context, IDs = tmp)
+		all_units = self.select(self.aliases['creatures'])
 
 		try: units = map(lambda x: all_units[int(x)], args[:pivot])
 		except ValueError:
@@ -201,7 +200,7 @@ class UI(object):
 			print "\t%s - %s" % (type(e), e)
 			return
 
-	def done(self):
+	def cmd_done(self):
 		return False
 
 	def short_spell_list(self):
@@ -209,7 +208,7 @@ class UI(object):
 		return ', '.join(['%d) %s (%s)' % (i, x._name, x._cost) for i,x in enumerate(spells)])
 
 	def input(self):
-		cmds = {'cast':self.cast, 'show':self.show, 'move':self.move, 'select':self.select, 'done':self.done}
+		cmds = {'cast':self.cmd_cast, 'show':self.cmd_show, 'move':self.cmd_move, 'select':self.cmd_select, 'done':self.cmd_done}
 		print 'mana:', self.player.mana
 		print self.short_spell_list()
 		data = raw_input(">").split(' ')

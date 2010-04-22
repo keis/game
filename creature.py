@@ -1,5 +1,6 @@
 from hook import Hookable
 from zone import zUnordered,zPublic
+from owned import friendly
 
 class CreatureStack(zUnordered, zPublic): pass
 
@@ -14,10 +15,22 @@ class Creature(Hookable):
 	defence = 0
 	hp = 1
 	cost = 1
+	stealthed = False
+	can_stealth = False
+
 	def __init__(self, damage = 0, position = None, **kwargs):
 		self.damage = damage
 		self.position = position
 		super(Creature, self).__init__(**kwargs)
+
+		if self.can_stealth:
+			self.add_global_hook('start-of-turn', self._go_stealthed)
+
+	def _go_stealthed(self, t, player):
+		if not self.stealthed:
+			self.run_hook('pre-stealth')
+			self.stealthed = True
+			self.run_hook('post-stealth')
 
 	def get_attack(self):
 		(attack,) = self.run_hook('pre-get-attack', self.attack)

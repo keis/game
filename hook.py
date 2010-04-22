@@ -63,6 +63,15 @@ class HookDB(defaultdict):
 	def __init__(self):
 		defaultdict.__init__(self, HookDB.hook_dict)
 
+	def dump(self):
+		""" DEBUG """
+		for obj,hooks in self.items():
+			print '+ %s' % obj
+			for hook,callbacks in hooks.items():
+				print '\t%s' % hook
+				for cb,owner in callbacks:
+					print '\t\t%s %s' % (cb, owner)
+
 	def hook(self, target, key, func, owner=None):
 		if owner is None:
 			owner = target

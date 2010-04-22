@@ -18,6 +18,8 @@ Units: %s""" % (obj.__class__.__name__, obj.damage, obj.hp, view(viewer, obj.par
 class CreatureView(View):
 	def __str__(self):
 		viewer,obj,opts = self.viewer,self.obj,self.opts
+		if obj.stealthed and getattr(obj, 'owner', None) != self.viewer:
+			return ''
 		if not opts.get('long', False):
 			return str(obj.__class__.__name__)
 		return """%s at %s

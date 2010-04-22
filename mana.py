@@ -18,6 +18,7 @@ for t in turns:
 	player,ui = t
 	ui.active = True
 	print "it is now %s's turn" % player
+	hook_db.dump()
 	hook_db.run_hook(None, 'start-of-turn', player)
 
 	while ui.input() != False: pass
@@ -31,5 +32,7 @@ for t in turns:
 		else:
 			print "no battles in %s territory" % p
 
+	player.build_pool()
 	player.focus()
+	hook_db.run_hook(None, 'end-of-turn', player)
 	ui.active = False
