@@ -20,8 +20,9 @@ class Tree(object):
 	def connect(self, other, index = 0):
 		# index have only a estetical effect, but I like to feel pretty
 		pads = self.free_pads()
-		if other.parent is None and pads:
-			pad = pads[index]
+		print pads, index
+		pad = self.free_pads()[index]
+		if other.parent is None and pad:
 			pad.node.pads[pad.index] = other
 			other.parent = self
 
