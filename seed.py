@@ -27,7 +27,7 @@ next_player_id = 0
 def create_player():
 	global next_player_id
 	m = Mage(name='player%s' % next_player_id, hook_db = hook_db, context = context, IDs = ids)
-	rubies = [MediumManaRuby(owner=m, hook_db=hook_db) for x in range(4)]
+	rubies = [MediumManaRuby(owner=m, hook_db=hook_db) for x in range(3)]
 	m.core = Core(owner=m)
 	spells = [x(owner=m) for x in starting_spells]
 	m.library.add(spells)
