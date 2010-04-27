@@ -14,9 +14,11 @@ class Mage(Hookable):
 	class Pool(zRandom, zPrivate): pass
 	class Summary(list): pass
 
-	def __init__(self, name='Rincewind', **kwargs):
+	def __init__(self, name='Rincewind', context=None, IDs=None, **kwargs):
 		super(Mage, self).__init__(**kwargs)
 		self.name = name
+		self.context = context
+		self.IDs = IDs
 		self.library = Mage.Library(owner=self)
 		self.focused = Mage.Focused(owner=self)
 		self.pool = Mage.Pool(owner=self)
@@ -26,6 +28,14 @@ class Mage(Hookable):
 		self.buildings = Mage.Summary()
 
 		self.mana = 0
+
+	def build_IDs(self):
+		tmp = {
+			'self' : self,
+			'opponent' : [x for x in select('> Mage', self.context) if not x is self][0]
+		}
+		tmp.update(self.IDs)
+		return tmp
 
 	def __children(self):
 		return [self.library, self.focused, self.core, self.buildings, self.creatures]

@@ -1,4 +1,4 @@
-from seed import players,spells,buildings,creatures,hook_db,context,ids
+from seed import players,spells,buildings,creatures,hook_db
 from textview import db as view_db
 from error import GameError
 
@@ -18,9 +18,8 @@ class UI(object):
 		'op_creatures' : '#opponent > Summary > Creature',
 	}
 
-	def __init__(self, player, opponent):
+	def __init__(self, player):
 		self.player = player
-		self.opponent = opponent
 		self.active = False
 
 		hook_db.hook(None, 'post-repair', self.repair_p)
@@ -60,26 +59,18 @@ class UI(object):
 	def _select(self, q, c=None):
 		from xselect import _select
 		if c is None:
-			c = context
+			c = self.player.context
 
-		tmp = {
-			'self' : self.player,
-			'opponent' : self.opponent
-		}
-		tmp.update(ids)
+		tmp = self.player.build_IDs()
 		
 		return _select(q, c, IDs = tmp)
 	
 	def select(self, q , c=None):
 		from xselect import select
 		if c is None:
-			c = context
+			c = self.player.context
 
-		tmp = {
-			'self' : self.player,
-			'opponent' : self.opponent
-		}
-		tmp.update(ids)
+		tmp = self.player.build_IDs()
 		
 		return select(q, c, IDs = tmp)
 

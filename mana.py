@@ -6,7 +6,7 @@ import act
 for x in range(2):
 	create_player()
 
-uis = [UI(players[0], players[1]), UI(players[1], players[0])]
+uis = [UI(p) for p in players]
 
 def turns():
 	while True:
