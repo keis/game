@@ -60,13 +60,31 @@ class Mage(Hookable):
 		self.run_hook('post-build-pool', pool)
 
 		self.pool = pool
+		print 'HOE', self.pool
 
 	def focus(self):
+		def have_mana():
+			return any(isinstance(x, ManaRuby.ManaShard) for x in focused)
+
+		def have_spell():
+			return any(isinstance(x, Spell) for x in focused)
+
 		pool = self.pool
-		focused = pool.get(FOCUS_SIZE)
-		(pool, focused) = self.run_hook('pre-focus', pool, focused)
-		self.focused[:] = focused
-		self.run_hook('post-focus', pool, focused)
+
+		# TODO, make sure there is atleast one spell and manashard in the pool
+		# or limit the number of attempts
+		while True:
+			if pool == []:
+				break
+			focused = pool.get(FOCUS_SIZE)
+			(pool, focused) = self.run_hook('pre-focus', pool, focused)
+
+			if not (have_mana() and have_spell()):
+				print 'mulligan', focused
+				continue
+
+			self.focused[:] = focused
+			self.run_hook('post-focus', pool, focused)
 
 		self.convert_mana()
 
