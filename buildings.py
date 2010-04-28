@@ -64,4 +64,7 @@ class Boulder(Building, Focusable):
 		super(Boulder, self).__init__(**kwargs)
 
 		self.add_hook('pre-repair', lambda s, a: (s, 0))
-		self.owner.add_hook('pre-build-pool', lambda z: z.add(self))
+		# ! add tries to treat the argument as a list if possible
+		# buildings export their children via the list interface, wrap like this
+		# to avoid adding them instead.
+		self.owner.add_hook('pre-build-pool', lambda z: z.add([self]))

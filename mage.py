@@ -13,9 +13,11 @@ class Mage(Hookable):
 	class Pool(zRandom, zPrivate): pass
 	class Summary(list): pass
 
-	def __init__(self, name='Rincewind', **kwargs):
+	def __init__(self, name='Rincewind', context=None, IDs=None, **kwargs):
 		super(Mage, self).__init__(**kwargs)
 		self.name = name
+		self.context = context
+		self.IDs = IDs
 		self.library = Mage.Library(owner=self)
 		self.focused = Mage.Focused(owner=self)
 		self.pool = Mage.Pool(owner=self)
@@ -25,6 +27,14 @@ class Mage(Hookable):
 		self.buildings = Mage.Summary()
 
 		self.mana = 0
+
+	def build_IDs(self):
+		tmp = {
+			'self' : self,
+			'opponent' : [x for x in select('> Mage', self.context) if not x is self][0]
+		}
+		tmp.update(self.IDs)
+		return tmp
 
 	def __children(self):
 		return [self.library, self.focused, self.core, self.buildings, self.creatures]
@@ -49,13 +59,31 @@ class Mage(Hookable):
 		self.run_hook('post-build-pool', pool)
 
 		self.pool = pool
+		print 'HOE', self.pool
 
 	def focus(self):
+		def have_mana():
+			return any(isinstance(x, ManaRuby.ManaShard) for x in focused)
+
+		def have_spell():
+			return any(isinstance(x, Spell) for x in focused)
+
 		pool = self.pool
-		focused = pool.get(FOCUS_SIZE)
-		(pool, focused) = self.run_hook('pre-focus', pool, focused)
-		self.focused[:] = focused
-		self.run_hook('post-focus', pool, focused)
+
+		# TODO, make sure there is atleast one spell and manashard in the pool
+		# or limit the number of attempts
+		while True:
+			if pool == []:
+				break
+			focused = pool.get(FOCUS_SIZE)
+			(pool, focused) = self.run_hook('pre-focus', pool, focused)
+
+			if not (have_mana() and have_spell()):
+				print 'mulligan', focused
+				continue
+
+			self.focused[:] = focused
+			self.run_hook('post-focus', pool, focused)
 
 		self.convert_mana()
 
