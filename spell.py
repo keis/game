@@ -54,6 +54,6 @@ def spell(desc=None, cost = 1, sacrifice = 0, tags = ()):
 			def __init__(self, **kwargs):
 				super(_Spell, self).__init__(tags=tags, **kwargs)
 				self.func = func
-		return _Spell
+		return type(func.__name__, (_Spell,), {})
 		
 	return spell_i
