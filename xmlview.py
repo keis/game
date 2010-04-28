@@ -1,5 +1,5 @@
 from view import View,ViewDB
-from building import Building
+from building import Building,Pad
 from creature import Creature
 from spell import Spell
 from mage import Mage
@@ -38,6 +38,11 @@ class MageView(View):
 		viewer,obj,opts = self.viewer,self.obj,self.opts
 		return '<Mage name="%s"/>' % obj.name
 
+class PadView(View):
+	def __str__(self):
+		viewer,obj,opts = self.viewer,self.obj,self.opts
+		return '<Pad building="%s" index="%s"/>' % (obj.node, obj.index)
+
 class ListView(View):
 	def __str__(self):
 		viewer,obj,opts = self.viewer,self.obj,self.opts
@@ -75,6 +80,7 @@ db.update({
 	Creature : CreatureView,
 	Mage : MageView,
 	Spell : SpellView,
+	Pad : PadView,
 	zHidden : HiddenZoneView,
 	zPrivate : PrivateZoneView,
 	zPublic : PublicZoneView,
