@@ -1,6 +1,7 @@
 from seed import players,spells,buildings,creatures,hook_db,context,ids
 from textview import db as view_db
 from error import GameError
+import act
 
 class UI(object):
 	aliases = {
@@ -194,7 +195,7 @@ class UI(object):
 			print "You don't want to move anything? fine with me"
 			return
 
-		try: self.player.order_movement(units, target)
+		try: act.move_creatures(self.player, units, target)
 		except GameError, e:
 			print "Oh No! you made the game sad"
 			print "\t%s - %s" % (type(e), e)

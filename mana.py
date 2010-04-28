@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from seed import players,spells,create_player,hook_db
 from ui import UI
-import act
+import battle
 
 for x in range(2):
 	create_player()
@@ -18,7 +18,7 @@ for t in turns:
 	player,ui = t
 	ui.active = True
 	print "it is now %s's turn" % player
-	hook_db.dump()
+	#hook_db.dump()
 	hook_db.run_hook(None, 'start-of-turn', player)
 
 	while ui.input() != False: pass
@@ -28,7 +28,7 @@ for t in turns:
 		if len(battles) > 0:
 			for x in battles:
 				print 'battle @ %s' % x
-				act.battle(x)
+				battle.battle(x)
 		else:
 			print "no battles in %s territory" % p
 

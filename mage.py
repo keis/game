@@ -2,7 +2,6 @@ from zone import zRandom,zUnordered,zPrivate,zPublic
 from buildings import ManaRuby
 from spell import Spell
 from hook import Hookable
-from act import move_creatures
 from error import NotEnoughMana
 from xselect import select
 
@@ -77,9 +76,6 @@ class Mage(Hookable):
 			spell.cast(self, targets)
 		else:
 			raise NotEnoughMana("%s < %s" % (self.mana, cost))
-
-	def order_movement(self, units, target):
-		move_creatures(units, target)
 
 	def discard(self, count, desc=None):
 		# TODO: Make it possible to choose which focusables to discard
