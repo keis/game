@@ -45,6 +45,7 @@ def create_player():
 	m.core.add_creature(l)
 	map(m.add_building, [m.core] + rubies)
 
+	m.build_pool()
 	m.focus()
 
 	next_player_id += 1
