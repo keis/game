@@ -59,7 +59,6 @@ class Mage(Hookable):
 		self.run_hook('post-build-pool', pool)
 
 		self.pool = pool
-		print 'HOE', self.pool
 
 	def focus(self):
 		def have_mana():
