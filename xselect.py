@@ -12,7 +12,7 @@ def flatten(tree):
 		except TypeError:
 			pass
 
-robj = re.compile(r'^([a-zA-Z]*)(#([a-zA-Z]+))?(\[([a-zA-Z_]+)(=)(.+)\])?$')
+robj = re.compile(r'^([a-zA-Z_]*)(#([a-zA-Z_]+))?(\[([a-zA-Z_]+)(=)(.+)\])?$')
 def _select(q, context, IDs=None):
 	def children(x):
 		try: iter(x)
